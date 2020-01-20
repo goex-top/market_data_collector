@@ -1,0 +1,15 @@
+{
+  "subs": [
+    {
+      "exchange_name": "binance.com",
+      "currency_pair": "BTC_USDT",
+      "period": 100,
+      "flag": 3,
+      "direct": false
+    }
+  ],
+  "store": {
+    "csv": true
+  },
+  "market_center_path": "/tmp/goex.market.center"
+}
