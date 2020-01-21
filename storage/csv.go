@@ -17,6 +17,8 @@ type CsvStorage struct {
 	exchangeName   string
 	pair           string
 	flag           market_center.DataFlag
+	prefix         string
+	outputPath     string
 	saveDepthChan  chan goex.Depth
 	saveTickerChan chan goex.Ticker
 	saveKlineChan  chan goex.Kline
@@ -35,6 +37,8 @@ func NewCsvStorage(
 	exchangeName string,
 	pair string,
 	flag market_center.DataFlag,
+	prefix string,
+	outputPath string,
 ) *CsvStorage {
 	var saveDepthChan chan goex.Depth
 	var saveTickerChan chan goex.Ticker
@@ -51,7 +55,7 @@ func NewCsvStorage(
 	isNew := false
 
 	if flag&market_center.DataFlag_Depth != 0 {
-		isNew, depthFile = openFile(fmt.Sprintf("depth_%s_%s_%s.csv", exchangeName, pair, ts))
+		isNew, depthFile = openFile(fmt.Sprintf("%s/depth_%s_%s_%s.csv", prefix, exchangeName, pair, ts))
 		depthCsv = csv.NewWriter(depthFile)
 		if isNew {
 			data := []string{"t", "a", "b"}
@@ -62,7 +66,7 @@ func NewCsvStorage(
 	}
 
 	if flag&market_center.DataFlag_Ticker != 0 {
-		isNew, tickerFile = openFile(fmt.Sprintf("ticker_%s_%s_%s.csv", exchangeName, pair, ts))
+		isNew, tickerFile = openFile(fmt.Sprintf("%s/ticker_%s_%s_%s.csv", prefix, exchangeName, pair, ts))
 		tickerCsv = csv.NewWriter(tickerFile)
 		if isNew {
 			data := []string{"t", "b", "s", "h", "l", "v"}
@@ -73,7 +77,7 @@ func NewCsvStorage(
 	}
 
 	if flag&market_center.DataFlag_Kline != 0 {
-		isNew, klineFile = openFile(fmt.Sprintf("depth_%s_%s_%s.csv", exchangeName, pair, ts))
+		isNew, klineFile = openFile(fmt.Sprintf("%s/depth_%s_%s_%s.csv", prefix, exchangeName, pair, ts))
 		klineCsv = csv.NewWriter(klineFile)
 		if isNew {
 			data := []string{"t", "o", "h", "l", "c", "v"}
@@ -88,6 +92,8 @@ func NewCsvStorage(
 		exchangeName:   exchangeName,
 		pair:           pair,
 		flag:           flag,
+		prefix:         prefix,
+		outputPath:     outputPath,
 		saveDepthChan:  saveDepthChan,
 		saveTickerChan: saveTickerChan,
 		saveKlineChan:  saveKlineChan,
@@ -148,18 +154,41 @@ func openFile(fileName string) (bool, *os.File) {
 	return isNew, file
 }
 
+func (s *CsvStorage) Close() {
+	if s.depthCsv != nil {
+		s.depthCsv.Flush()
+		s.depthFile.Close()
+	}
+	if s.tickerCsv != nil {
+		s.tickerCsv.Flush()
+		s.tickerFile.Close()
+	}
+	if s.klineCsv != nil {
+		s.klineCsv.Flush()
+		s.klineFile.Close()
+	}
+}
+
 func (s *CsvStorage) reNewFile() {
 	now := time.Now()
 	if now.Day() == s.fileTimestamp.Day() {
 		return
 	}
+	s.Close()
+	ts := s.fileTimestamp.Format("2006-01-02")
+	CompressAllCsv(s.prefix, fmt.Sprintf("%s/%s_%s_%s", s.outputPath, s.exchangeName, s.pair, ts))
+	csvs := GetAllFileName(s.prefix, "csv")
+	for _, v := range csvs {
+		os.Remove(v)
+	}
+
 	s.fileTimestamp = now
 
-	ts := s.fileTimestamp.Format("2006-01-02")
+	ts = s.fileTimestamp.Format("2006-01-02")
 	isNew := false
 
 	if s.flag&market_center.DataFlag_Depth != 0 {
-		isNew, s.depthFile = openFile(fmt.Sprintf("depth_%s_%s_%s.csv", s.exchangeName, s.pair, ts))
+		isNew, s.depthFile = openFile(fmt.Sprintf("%s/depth_%s_%s_%s.csv", s.prefix, s.exchangeName, s.pair, ts))
 		s.depthCsv = csv.NewWriter(s.depthFile)
 		if isNew {
 			data := []string{"t", "a", "b"}
@@ -169,7 +198,7 @@ func (s *CsvStorage) reNewFile() {
 	}
 
 	if s.flag&market_center.DataFlag_Ticker != 0 {
-		isNew, s.tickerFile = openFile(fmt.Sprintf("ticker_%s_%s_%s.csv", s.exchangeName, s.pair, ts))
+		isNew, s.tickerFile = openFile(fmt.Sprintf("%s/ticker_%s_%s_%s.csv", s.prefix, s.exchangeName, s.pair, ts))
 		s.tickerCsv = csv.NewWriter(s.tickerFile)
 		if isNew {
 			data := []string{"t", "b", "s", "h", "l", "v"}
@@ -179,7 +208,7 @@ func (s *CsvStorage) reNewFile() {
 	}
 
 	if s.flag&market_center.DataFlag_Kline != 0 {
-		isNew, s.klineFile = openFile(fmt.Sprintf("depth_%s_%s_%s.csv", s.exchangeName, s.pair, ts))
+		isNew, s.klineFile = openFile(fmt.Sprintf("%s/depth_%s_%s_%s.csv", s.prefix, s.exchangeName, s.pair, ts))
 		s.klineCsv = csv.NewWriter(s.klineFile)
 		if isNew {
 			data := []string{"t", "o", "h", "l", "c", "v"}
@@ -249,18 +278,7 @@ func (s *CsvStorage) SaveWorker() {
 			s.klineCsv.Flush()
 
 		case <-s.ctx.Done():
-			if s.depthCsv != nil {
-				s.depthCsv.Flush()
-				s.depthFile.Close()
-			}
-			if s.tickerCsv != nil {
-				s.tickerCsv.Flush()
-				s.tickerFile.Close()
-			}
-			if s.klineCsv != nil {
-				s.klineCsv.Flush()
-				s.klineFile.Close()
-			}
+			s.Close()
 			fmt.Printf("(%s) %s saveWorker exit\n", s.exchangeName, s.pair)
 			return
 		}

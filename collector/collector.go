@@ -22,14 +22,20 @@ func NewCollector(ctx context.Context, c *client.Client, period int64, flag mark
 				if flag&market_center.DataFlag_Depth != 0 {
 					depth := c.GetDepth()
 					if depth != nil {
+						if depth.UTime.UnixNano() == -6795364578871345152 {
+							depth.UTime = time.Now()
+						}
 						csvStore.SaveDepth(depth)
 					}
 				}
 
 				if flag&market_center.DataFlag_Ticker != 0 {
-					depth := c.GetTicker()
-					if depth != nil {
-						csvStore.SaveTicker(depth)
+					ticker := c.GetTicker()
+					if ticker != nil {
+						if ticker.Date == 0 {
+							ticker.Date = uint64(time.Now().UnixNano() / int64(time.Millisecond))
+						}
+						csvStore.SaveTicker(ticker)
 					}
 				}
 

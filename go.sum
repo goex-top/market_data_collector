@@ -11,8 +11,12 @@ github.com/go-openapi/errors v0.19.2/go.mod h1:qX0BLWsyaKfvhluLejVpVNwNRdXZhEbTA
 github.com/goex-top/market_center v0.0.0-20200117093829-e21a8433eb2d/go.mod h1:tm7oNqUro0wHhb4DVjIFhJ9RAAI46MWm+kuc0ZHehfw=
 github.com/goex-top/market_center v0.0.0-20200120090804-514eb7e82043 h1:6xIP1++ttMav67q5AX8LD7Qr5iXxMRyZ8hCD0IIQcpM=
 github.com/goex-top/market_center v0.0.0-20200120090804-514eb7e82043/go.mod h1:jE5o/u6j6gNna8JlHnY3rd5P2tvjsuQz4e+D5d4y4lM=
+github.com/goex-top/market_center v0.0.0-20200121004653-fb9691323253 h1:xO7VEQB6WRCuL6I590IdKddtmNrmoNN6fhsbEjpThkI=
+github.com/goex-top/market_center v0.0.0-20200121004653-fb9691323253/go.mod h1:jE5o/u6j6gNna8JlHnY3rd5P2tvjsuQz4e+D5d4y4lM=
 github.com/goex-top/market_center_client v0.0.0-20200120002412-3b4ba5725ca4 h1:CgNZTEEpWeaOpJhWgie2fvsyhj2q0hxMJITqCPepoIs=
 github.com/goex-top/market_center_client v0.0.0-20200120002412-3b4ba5725ca4/go.mod h1:eqZ7bRjVLlqhrzFoDmvHNE8or2X+mF/P6YZQkH+ojW4=
+github.com/goex-top/market_center_client v0.0.0-20200121004623-1597697f373e h1:DTJ3nXnLshGqLGWlAL6KXDx3b6Mh7QcBG14YpjoEvtg=
+github.com/goex-top/market_center_client v0.0.0-20200121004623-1597697f373e/go.mod h1:0w6W0TpBJAxYKI/XZn5CruarhICSIsi+IDURaCHqksg=
 github.com/google/gofuzz v1.0.0/go.mod h1:dBl0BpW6vV/+mYPU4Po3pmUjxk6FQPldtuIdl/M65Eg=
 github.com/google/uuid v1.1.1 h1:Gkbcsh/GbpXz7lPftLA3P6TYMwjCLYm83jiFQZF/3gY=
 github.com/google/uuid v1.1.1/go.mod h1:TIyPZe4MgqvfeYDBFedMoGGpEw/LqOeaOT+nhxU+yHo=
@@ -46,6 +50,7 @@ github.com/pkg/errors v0.8.1/go.mod h1:bwawxfHBFNV+L2hUp1rHADufV3IMtnDRdf1r5NINE
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
 github.com/rifflock/lfshook v0.0.0-20180920164130-b9218ef580f5/go.mod h1:GEXHk5HgEKCvEIIrSpFI3ozzG5xOKA2DVlEX/gGnewM=
+github.com/sirupsen/logrus v1.4.2 h1:SPIRibHv4MatM3XXNO2BJeFLZwZ2LvZgfQ5+UNI2im4=
 github.com/sirupsen/logrus v1.4.2/go.mod h1:tLMulIdttU9McNUspp0xgXVQah82FyeX6MwdIuYE2rE=
 github.com/stretchr/objx v0.1.0/go.mod h1:HFkY916IF+rwdDfMAkV7OtwuqBVzrE8GR6GFx+wExME=
 github.com/stretchr/objx v0.1.1/go.mod h1:HFkY916IF+rwdDfMAkV7OtwuqBVzrE8GR6GFx+wExME=
@@ -64,6 +69,7 @@ golang.org/x/crypto v0.0.0-20190308221718-c2843e01d9a2/go.mod h1:djNgcEr1/C05ACk
 golang.org/x/net v0.0.0-20190827160401-ba9fcec4b297 h1:k7pJ2yAPLPgbskkFdhRCsA77k2fySZ1zf2zCjvQCiIM=
 golang.org/x/net v0.0.0-20190827160401-ba9fcec4b297/go.mod h1:z5CRVTTTmAJ677TzLLGU+0bjPO0LkuOLi4/5GtJWs/s=
 golang.org/x/sys v0.0.0-20190215142949-d0b11bdaac8a/go.mod h1:STP8DvDyc/dI5b8T5hshtkjS+E42TnysNCUPdjciGhY=
+golang.org/x/sys v0.0.0-20190422165155-953cdadca894 h1:Cz4ceDQGXuKRnVBDTS23GTn/pU5OE2C0WrNTOYK1Uuc=
 golang.org/x/sys v0.0.0-20190422165155-953cdadca894/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
 golang.org/x/text v0.3.0/go.mod h1:NqM8EUOU14njkJ3fqMW+pc6Ldnwhi/IjpwHt7yyuwOQ=
 gopkg.in/check.v1 v0.0.0-20161208181325-20d25e280405 h1:yhCVgyC4o1eVCa2tZl7eS0r+SDo693bJlVdllGtEeKM=

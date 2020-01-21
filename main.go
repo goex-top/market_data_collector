@@ -54,7 +54,7 @@ func main() {
 	fmt.Println(cfg)
 	ctx, cancel := context.WithCancel(context.Background())
 	for _, v := range cfg.Subs {
-		sto := storage.NewCsvStorage(ctx, v.ExchangeName, v.CurrencyPair, v.Flag)
+		sto := storage.NewCsvStorage(ctx, v.ExchangeName, v.CurrencyPair, v.Flag, "csv", "tar")
 		go sto.SaveWorker()
 		c := &client.Client{}
 		if v.Direct {

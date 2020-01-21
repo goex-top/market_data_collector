@@ -1,3 +1,5 @@
 /.idea
 /market_data_collector*
 /*.csv
+/csv/*.csv
+/tar/*.tar.gz
