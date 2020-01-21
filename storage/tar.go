@@ -43,9 +43,9 @@ func CompressAllCsv(inputPath, dest string) error {
 		if strings.HasSuffix(fi.Name(), "csv") {
 			fmt.Printf("%s\n", fi.Name())
 
-			file, err1 := os.OpenFile(fi.Name(), os.O_RDONLY, 666)
+			file, err1 := os.OpenFile(inputPath+"/"+fi.Name(), os.O_RDONLY, 666)
 			if err1 != nil {
-				fmt.Printf("open %s error:%v", fi.Name(), err1)
+				fmt.Printf("open %s error:%v", inputPath+fi.Name(), err1)
 			}
 			csvFiles = append(csvFiles, file)
 		}
