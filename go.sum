@@ -13,10 +13,14 @@ github.com/goex-top/market_center v0.0.0-20200120090804-514eb7e82043 h1:6xIP1++t
 github.com/goex-top/market_center v0.0.0-20200120090804-514eb7e82043/go.mod h1:jE5o/u6j6gNna8JlHnY3rd5P2tvjsuQz4e+D5d4y4lM=
 github.com/goex-top/market_center v0.0.0-20200121004653-fb9691323253 h1:xO7VEQB6WRCuL6I590IdKddtmNrmoNN6fhsbEjpThkI=
 github.com/goex-top/market_center v0.0.0-20200121004653-fb9691323253/go.mod h1:jE5o/u6j6gNna8JlHnY3rd5P2tvjsuQz4e+D5d4y4lM=
+github.com/goex-top/market_center v1.0.1-alpha.0.20200121091133-832ae1cd2584 h1:Obsm8hUDjxLCr4cVyecRNCAh/vcOQRpaEEsjC52jZlI=
+github.com/goex-top/market_center v1.0.1-alpha.0.20200121091133-832ae1cd2584/go.mod h1:jE5o/u6j6gNna8JlHnY3rd5P2tvjsuQz4e+D5d4y4lM=
 github.com/goex-top/market_center_client v0.0.0-20200120002412-3b4ba5725ca4 h1:CgNZTEEpWeaOpJhWgie2fvsyhj2q0hxMJITqCPepoIs=
 github.com/goex-top/market_center_client v0.0.0-20200120002412-3b4ba5725ca4/go.mod h1:eqZ7bRjVLlqhrzFoDmvHNE8or2X+mF/P6YZQkH+ojW4=
 github.com/goex-top/market_center_client v0.0.0-20200121004623-1597697f373e h1:DTJ3nXnLshGqLGWlAL6KXDx3b6Mh7QcBG14YpjoEvtg=
 github.com/goex-top/market_center_client v0.0.0-20200121004623-1597697f373e/go.mod h1:0w6W0TpBJAxYKI/XZn5CruarhICSIsi+IDURaCHqksg=
+github.com/goex-top/market_center_client v0.0.0-20200121091348-08fd0a2b4058 h1:D0PbILjS4cFhtnieHAJK0zROWQ2Sd9Z2jWIRupJOgRE=
+github.com/goex-top/market_center_client v0.0.0-20200121091348-08fd0a2b4058/go.mod h1:0w6W0TpBJAxYKI/XZn5CruarhICSIsi+IDURaCHqksg=
 github.com/google/gofuzz v1.0.0/go.mod h1:dBl0BpW6vV/+mYPU4Po3pmUjxk6FQPldtuIdl/M65Eg=
 github.com/google/uuid v1.1.1 h1:Gkbcsh/GbpXz7lPftLA3P6TYMwjCLYm83jiFQZF/3gY=
 github.com/google/uuid v1.1.1/go.mod h1:TIyPZe4MgqvfeYDBFedMoGGpEw/LqOeaOT+nhxU+yHo=
