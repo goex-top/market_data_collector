@@ -177,10 +177,16 @@ func (s *CsvStorage) reNewFile() {
 	s.Close()
 	ts := s.fileTimestamp.Format("2006-01-02")
 	go func() {
+		fmt.Println("start to compress *.csv to *.tar.gz")
 		CompressAllCsv(s.prefix, fmt.Sprintf("%s/%s_%s_%s.tar.gz", s.outputPath, s.exchangeName, s.pair, ts))
 		csvs := GetAllFileName(s.prefix, "csv")
 		for _, v := range csvs {
-			os.Remove(v)
+			err := os.Remove(s.prefix + "/" + v)
+			if err != nil {
+				fmt.Printf("remove file %s fail:%s\n", s.prefix+"/"+v, err.Error())
+			} else {
+				fmt.Printf("remove file %s success\n", s.prefix+"/"+v)
+			}
 		}
 	}()
 
