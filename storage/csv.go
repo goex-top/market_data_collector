@@ -8,6 +8,7 @@ import (
 	jsoniter "github.com/json-iterator/go"
 	goex "github.com/nntaoli-project/GoEx"
 	"os"
+	"strings"
 	"time"
 )
 
@@ -175,12 +176,15 @@ func (s *CsvStorage) reNewFile() {
 		return
 	}
 	s.Close()
-	ts := s.fileTimestamp.Format("2006-01-02")
-	go func() {
+	go func(fileTimestamp time.Time) {
+		ts := fileTimestamp.Format("2006-01-02")
 		fmt.Println("start to compress *.csv to *.tar.gz")
 		CompressAllCsv(s.prefix, fmt.Sprintf("%s/%s_%s_%s.tar.gz", s.outputPath, s.exchangeName, s.pair, ts))
 		csvs := GetAllFileName(s.prefix, "csv")
 		for _, v := range csvs {
+			if !strings.Contains(v, ts) {
+				continue
+			}
 			err := os.Remove(s.prefix + "/" + v)
 			if err != nil {
 				fmt.Printf("remove file %s fail:%s\n", s.prefix+"/"+v, err.Error())
@@ -188,11 +192,11 @@ func (s *CsvStorage) reNewFile() {
 				fmt.Printf("remove file %s success\n", s.prefix+"/"+v)
 			}
 		}
-	}()
+	}(s.fileTimestamp)
 
 	s.fileTimestamp = now
 
-	ts = s.fileTimestamp.Format("2006-01-02")
+	ts := s.fileTimestamp.Format("2006-01-02")
 	isNew := false
 
 	if s.flag&market_center.DataFlag_Depth != 0 {

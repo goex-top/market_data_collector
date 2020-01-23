@@ -4,12 +4,15 @@
 Collect market data for quant analysis
 
 ## Storage
-Store daily data in different `csv` files
+Store daily data in different `csv` files in `csv` folder, compress it to `tar` folder
 
 ## Support Data
-* Trade 
+* Ticker 
 * Depth
-* Kline
+* ~~Kline~~
+
+## TODO
+* InfluxDB
 
 ### 观星者
 
