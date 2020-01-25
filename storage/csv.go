@@ -176,11 +176,11 @@ func (s *CsvStorage) reNewFile() {
 		return
 	}
 	s.Close()
+	csvs := GetAllFileName(s.prefix, "csv")
 	go func(fileTimestamp time.Time) {
 		ts := fileTimestamp.Format("2006-01-02")
 		fmt.Println("start to compress *.csv to *.tar.gz")
 		CompressAllCsv(s.prefix, fmt.Sprintf("%s/%s_%s_%s.tar.gz", s.outputPath, s.exchangeName, s.pair, ts))
-		csvs := GetAllFileName(s.prefix, "csv")
 		for _, v := range csvs {
 			if !strings.Contains(v, ts) {
 				continue
