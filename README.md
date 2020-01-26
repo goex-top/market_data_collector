@@ -26,9 +26,17 @@ Store daily data in different `csv` files in `csv` folder, compress it to `tar` 
 ├── okex.com_BTC_USDT_2020-01-24.tar.gz
 └── okex.com_BTC_USDT_2020-01-25.tar.gz
 ```
+
+## Format
+### ticker
+![ticker](ticker.png)
+
+### orderbook
+![orderbook](orderbook.png)
+
 ## Support Data
 * Ticker 
-* Depth
+* Depth(Orderbook)
 * ~~Kline~~
 
 ## TODO

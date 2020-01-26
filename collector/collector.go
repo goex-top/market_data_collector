@@ -10,7 +10,7 @@ import (
 )
 
 func NewCollector(ctx context.Context, c *client.Client, period int64, flag market_center.DataFlag, csvStore *storage.CsvStorage) {
-	fmt.Printf("(%s) %s new collector\n", c.ExchangeName, c.CurrencyPair)
+	fmt.Printf("(%s) %s new collector with flag[%d]\n", c.ExchangeName, c.CurrencyPair, flag)
 	go func() {
 		tick := time.NewTicker(time.Millisecond * time.Duration(period))
 		for {
@@ -38,7 +38,6 @@ func NewCollector(ctx context.Context, c *client.Client, period int64, flag mark
 						csvStore.SaveTicker(ticker)
 					}
 				}
-
 			}
 		}
 	}()
