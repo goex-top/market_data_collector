@@ -31,8 +31,23 @@ Store daily data in different `csv` files in `csv` folder, compress it to `tar` 
 ### ticker
 ![ticker](ticker.png)
 
+|  symbol | type | description |
+|  ----  | ----  | ----  |
+| t  | int | timestamp |
+| b  | float | best bid |
+| s  | float | best ask |
+| h  | float | high price |
+| l  | float | low price |
+| v  | float | volume |
+
 ### orderbook
 ![orderbook](orderbook.png)
+
+|  symbol | type | description |
+|  ----  | ----  | ----  |
+| t  | int | timestamp |
+| a  | array | asks list with size 20, each element is [p,q], p:price, q:qty |
+| b  | array | bids list with size 20, each element is [p,q], p:price, q:qty |
 
 ## Support Data
 * Ticker 
