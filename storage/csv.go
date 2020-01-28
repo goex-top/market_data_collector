@@ -7,6 +7,7 @@ import (
 	"github.com/goex-top/market_center"
 	jsoniter "github.com/json-iterator/go"
 	goex "github.com/nntaoli-project/GoEx"
+	"log"
 	"os"
 	"strings"
 	"time"
@@ -179,7 +180,7 @@ func (s *CsvStorage) reNewFile() {
 	csvs := GetAllFileName(s.prefix, "csv")
 	go func(fileTimestamp time.Time) {
 		ts := fileTimestamp.Format("2006-01-02")
-		fmt.Println("start to compress *.csv to *.tar.gz")
+		log.Println("start to compress *.csv to *.tar.gz")
 		CompressAllCsv(s.prefix, fmt.Sprintf("%s/%s_%s_%s.tar.gz", s.outputPath, s.exchangeName, s.pair, ts))
 		for _, v := range csvs {
 			if !strings.Contains(v, ts) {
@@ -187,9 +188,9 @@ func (s *CsvStorage) reNewFile() {
 			}
 			err := os.Remove(s.prefix + "/" + v)
 			if err != nil {
-				fmt.Printf("remove file %s fail:%s\n", s.prefix+"/"+v, err.Error())
+				log.Printf("remove file %s fail:%s\n", s.prefix+"/"+v, err.Error())
 			} else {
-				fmt.Printf("remove file %s success\n", s.prefix+"/"+v)
+				log.Printf("remove file %s success\n", s.prefix+"/"+v)
 			}
 		}
 	}(s.fileTimestamp)
@@ -291,7 +292,7 @@ func (s *CsvStorage) SaveWorker() {
 
 		case <-s.ctx.Done():
 			s.Close()
-			fmt.Printf("(%s) %s saveWorker exit\n", s.exchangeName, s.pair)
+			log.Printf("(%s) %s saveWorker exit\n", s.exchangeName, s.pair)
 			return
 		}
 	}

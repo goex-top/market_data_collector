@@ -3,9 +3,9 @@ package storage
 import (
 	"archive/tar"
 	"compress/gzip"
-	"fmt"
 	"io"
 	"io/ioutil"
+	"log"
 	"os"
 	"strings"
 )
@@ -14,7 +14,7 @@ func GetAllFileName(inputPath, suffix string) []string {
 	files := make([]string, 0)
 	finfos, err := ioutil.ReadDir(inputPath)
 	if err != nil {
-		fmt.Printf("err : %s \n", err)
+		log.Printf("err : %s \n", err)
 		return files
 	}
 	for _, fi := range finfos {
@@ -32,7 +32,7 @@ func CompressAllCsv(inputPath, dest string) error {
 	csvFiles := make([]*os.File, 0)
 	finfos, err := ioutil.ReadDir(inputPath)
 	if err != nil {
-		fmt.Printf("err : %s \n", err)
+		log.Printf("err : %s \n", err)
 		return err
 	}
 
@@ -41,11 +41,11 @@ func CompressAllCsv(inputPath, dest string) error {
 			continue
 		}
 		if strings.HasSuffix(fi.Name(), "csv") {
-			fmt.Printf("%s\n", fi.Name())
+			log.Printf("%s\n", fi.Name())
 
 			file, err1 := os.OpenFile(inputPath+"/"+fi.Name(), os.O_RDONLY, 666)
 			if err1 != nil {
-				fmt.Printf("open %s error:%v", inputPath+fi.Name(), err1)
+				log.Printf("open %s error:%v", inputPath+fi.Name(), err1)
 			}
 			csvFiles = append(csvFiles, file)
 		}

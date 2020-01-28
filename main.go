@@ -12,6 +12,7 @@ import (
 	"github.com/goex-top/market_data_collector/config"
 	"github.com/goex-top/market_data_collector/storage"
 	"github.com/nntaoli-project/GoEx/builder"
+	"log"
 	"os"
 	"os/signal"
 	"syscall"
@@ -51,7 +52,7 @@ func main() {
 	if !cfg.Store.Csv {
 		panic("currently only support csv, please check your configure")
 	}
-	fmt.Println(cfg)
+	log.Println(cfg)
 	ctx, cancel := context.WithCancel(context.Background())
 	for _, v := range cfg.Subs {
 		sto := storage.NewCsvStorage(ctx, v.ExchangeName, v.CurrencyPair, v.Flag, "csv", "tar")
@@ -80,5 +81,5 @@ func main() {
 	<-exitSignal
 	cancel()
 	time.Sleep(time.Second)
-	fmt.Println("market data collector exit")
+	log.Println("market data collector exit")
 }

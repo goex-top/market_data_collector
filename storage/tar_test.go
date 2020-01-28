@@ -8,7 +8,7 @@ import (
 func TestGetAllFileName(t *testing.T) {
 	csvs := GetAllFileName("../csv/", "csv")
 	for _, v := range csvs {
-		fmt.Println(v)
+		log.Println(v)
 		//t.Log(os.Remove("../csv/" + v))
 	}
 }

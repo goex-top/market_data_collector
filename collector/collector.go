@@ -2,21 +2,21 @@ package collector
 
 import (
 	"context"
-	"fmt"
 	"github.com/goex-top/market_center"
 	"github.com/goex-top/market_data_collector/client"
 	"github.com/goex-top/market_data_collector/storage"
+	"log"
 	"time"
 )
 
 func NewCollector(ctx context.Context, c *client.Client, period int64, flag market_center.DataFlag, csvStore *storage.CsvStorage) {
-	fmt.Printf("(%s) %s new collector with flag[%d]\n", c.ExchangeName, c.CurrencyPair, flag)
+	log.Printf("(%s) %s new collector with flag[%d]\n", c.ExchangeName, c.CurrencyPair, flag)
 	go func() {
 		tick := time.NewTicker(time.Millisecond * time.Duration(period))
 		for {
 			select {
 			case <-ctx.Done():
-				fmt.Printf("(%s) %s collector exit\n", c.ExchangeName, c.CurrencyPair)
+				log.Printf("(%s) %s collector exit\n", c.ExchangeName, c.CurrencyPair)
 				return
 			case <-tick.C:
 				if flag&market_center.DataFlag_Depth != 0 {
