@@ -45,6 +45,12 @@ func NewClient(exchangeName, currencyPair, contractType string, c *market_center
 	}
 }
 
+func (c *Client) Close() {
+	if c.c != nil {
+		c.c.Close()
+	}
+}
+
 func (c *Client) Name() string {
 	return c.ExchangeName
 }
