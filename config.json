@@ -5,7 +5,7 @@
       "currency_pair": "BTC_USDT",
       "period": 100,
       "flag": 2,
-      "direct": true
+      "direct": false
     }
   ],
   "store": {

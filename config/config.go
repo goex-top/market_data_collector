@@ -5,6 +5,7 @@ import "github.com/goex-top/market_center"
 type Subscribe struct {
 	ExchangeName string                 `json:"exchange_name"`
 	CurrencyPair string                 `json:"currency_pair"`
+	ContractType string                 `json:"contract_type, omitempty""`
 	Period       int64                  `json:"period"`
 	Flag         market_center.DataFlag `json:"flag"`
 	Direct       bool                   `json:"direct"`

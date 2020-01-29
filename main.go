@@ -11,7 +11,6 @@ import (
 	"github.com/goex-top/market_data_collector/collector"
 	"github.com/goex-top/market_data_collector/config"
 	"github.com/goex-top/market_data_collector/storage"
-	"github.com/nntaoli-project/GoEx/builder"
 	"log"
 	"os"
 	"os/signal"
@@ -59,17 +58,25 @@ func main() {
 		go sto.SaveWorker()
 		c := &client.Client{}
 		if v.Direct {
-			proxy := os.Getenv("HTTP_PROXY")
-			c = client.NewClient(v.ExchangeName, v.CurrencyPair, builder.NewAPIBuilder().HttpProxy(proxy).Build(v.ExchangeName), nil)
+			c = client.NewClient(v.ExchangeName, v.CurrencyPair, "", nil)
 		} else {
 			mccc := mcc.NewClient()
+			isSpot := market_center.IsFutureExchange(v.ExchangeName)
 			if v.Flag&market_center.DataFlag_Depth != 0 {
-				mccc.SubscribeDepth(v.ExchangeName, v.CurrencyPair, v.Period)
+				if isSpot {
+					mccc.SubscribeSpotDepth(v.ExchangeName, v.CurrencyPair, v.Period)
+				} else {
+					mccc.SubscribeFutureDepth(v.ExchangeName, v.ContractType, v.CurrencyPair, v.Period)
+				}
 			}
 			if v.Flag&market_center.DataFlag_Ticker != 0 {
-				mccc.SubscribeTicker(v.ExchangeName, v.CurrencyPair, v.Period)
+				if isSpot {
+					mccc.SubscribeSpotTicker(v.ExchangeName, v.CurrencyPair, v.Period)
+				} else {
+					mccc.SubscribeFutureTicker(v.ExchangeName, v.ContractType, v.CurrencyPair, v.Period)
+				}
 			}
-			c = client.NewClient(v.ExchangeName, v.CurrencyPair, nil, mcc.NewClient())
+			c = client.NewClient(v.ExchangeName, v.CurrencyPair, "", mccc)
 		}
 
 		collector.NewCollector(ctx, c, v.Period, v.Flag, sto)

@@ -1,35 +1,65 @@
 package client
 
 import (
+	"github.com/goex-top/market_center"
 	"github.com/goex-top/market_center_client"
 	goex "github.com/nntaoli-project/GoEx"
+	"github.com/nntaoli-project/GoEx/builder"
+	"os"
 )
 
 type Client struct {
 	ExchangeName string
 	CurrencyPair string
-	api          goex.API
+	contractType string
+	spotApi      goex.API
+	futureApi    goex.FutureRestAPI
 	c            *market_center_client.Client
+	isDirect     bool
+	isSpot       bool
 }
 
-func NewClient(exchangeName, currencyPair string, api goex.API, c *market_center_client.Client) *Client {
-	if api == nil && c == nil {
-		return nil
+func NewClient(exchangeName, currencyPair, contractType string, c *market_center_client.Client) *Client {
+	proxy := os.Getenv("HTTP_PROXY")
+	var spotApi goex.API
+	var futureApi goex.FutureRestAPI
+	var direct = false
+	var isSpot = false
+	if c == nil {
+		if market_center.IsFutureExchange(exchangeName) {
+			futureApi = builder.NewAPIBuilder().HttpProxy(proxy).BuildFuture(exchangeName)
+		} else {
+			spotApi = builder.NewAPIBuilder().HttpProxy(proxy).Build(exchangeName)
+			isSpot = true
+		}
+		direct = true
 	}
 	return &Client{
 		ExchangeName: exchangeName,
 		CurrencyPair: currencyPair,
-		api:          api,
+		spotApi:      spotApi,
+		futureApi:    futureApi,
+		contractType: contractType,
 		c:            c,
+		isDirect:     direct,
+		isSpot:       isSpot,
 	}
 }
 func (c *Client) GetTicker() *goex.Ticker {
 	var tick *goex.Ticker
 	var err error
-	if c.api != nil {
-		tick, err = c.api.GetTicker(goex.NewCurrencyPair2(c.CurrencyPair))
-	} else if c.c != nil {
-		tick, err = c.c.GetTicker(c.ExchangeName, c.CurrencyPair)
+	if c.isDirect {
+		if c.isSpot {
+			tick, err = c.spotApi.GetTicker(goex.NewCurrencyPair2(c.CurrencyPair))
+		} else {
+			tick, err = c.futureApi.GetFutureTicker(goex.NewCurrencyPair2(c.CurrencyPair), c.contractType)
+		}
+	} else {
+		if c.isSpot {
+			tick, err = c.c.GetSpotTicker(c.ExchangeName, c.CurrencyPair)
+		} else {
+			tick, err = c.c.GetFutureTicker(c.ExchangeName, c.contractType, c.CurrencyPair)
+		}
 	}
 	if err != nil {
 		return nil
@@ -40,10 +70,18 @@ func (c *Client) GetTicker() *goex.Ticker {
 func (c *Client) GetDepth() *goex.Depth {
 	var depth *goex.Depth
 	var err error
-	if c.api != nil {
-		depth, err = c.api.GetDepth(20, goex.NewCurrencyPair2(c.CurrencyPair))
-	} else if c.c != nil {
-		depth, err = c.c.GetDepth(c.ExchangeName, c.CurrencyPair)
+	if c.isDirect {
+		if c.isSpot {
+			depth, err = c.spotApi.GetDepth(20, goex.NewCurrencyPair2(c.CurrencyPair))
+		} else {
+			depth, err = c.futureApi.GetFutureDepth(goex.NewCurrencyPair2(c.CurrencyPair), c.contractType, 20)
+		}
+	} else {
+		if c.isSpot {
+			depth, err = c.c.GetSpotDepth(c.ExchangeName, c.CurrencyPair)
+		} else {
+			depth, err = c.c.GetFutureDepth(c.ExchangeName, c.contractType, c.CurrencyPair)
+		}
 	}
 	if err != nil {
 		return nil
