@@ -2,8 +2,8 @@
 
 Get market data directly
 ```go
-		c := client.NewClient(v.ExchangeName, v.CurrencyPair, "", nil)
-		c.GetTicker()
+    c := client.NewClient(ExchangeName, CurrencyPair, "", nil)
+    c.GetTicker()
 ```
 
 Get market data with market center
@@ -14,21 +14,21 @@ Get market data with market center
     )
 
     mccc := mcc.NewClient()
-    isSpot := market_center.IsFutureExchange(v.ExchangeName)
-    if v.Flag&market_center.DataFlag_Depth != 0 {
+    isSpot := market_center.IsFutureExchange(ExchangeName)
+    if Flag&market_center.DataFlag_Depth != 0 {
         if isSpot {
-            mccc.SubscribeSpotDepth(v.ExchangeName, v.CurrencyPair, v.Period)
+            mccc.SubscribeSpotDepth(ExchangeName, CurrencyPair, Period)
         } else {
-            mccc.SubscribeFutureDepth(v.ExchangeName, v.ContractType, v.CurrencyPair, v.Period)
+            mccc.SubscribeFutureDepth(ExchangeName, ContractType, CurrencyPair, Period)
         }
     }
-    if v.Flag&market_center.DataFlag_Ticker != 0 {
+    if Flag&market_center.DataFlag_Ticker != 0 {
         if isSpot {
-            mccc.SubscribeSpotTicker(v.ExchangeName, v.CurrencyPair, v.Period)
+            mccc.SubscribeSpotTicker(ExchangeName, CurrencyPair, Period)
         } else {
-            mccc.SubscribeFutureTicker(v.ExchangeName, v.ContractType, v.CurrencyPair, v.Period)
+            mccc.SubscribeFutureTicker(ExchangeName, ContractType, CurrencyPair, Period)
         }
     }
-    c := client.NewClient(v.ExchangeName, v.CurrencyPair, "", mccc)
+    c := client.NewClient(ExchangeName, CurrencyPair, "", mccc)
     c.GetTicker()
 ```

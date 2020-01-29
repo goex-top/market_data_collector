@@ -24,13 +24,12 @@ func NewClient(exchangeName, currencyPair, contractType string, c *market_center
 	var spotApi goex.API
 	var futureApi goex.FutureRestAPI
 	var direct = false
-	var isSpot = false
+	var isSpot = !market_center.IsFutureExchange(exchangeName)
 	if c == nil {
-		if market_center.IsFutureExchange(exchangeName) {
+		if isSpot {
 			futureApi = builder.NewAPIBuilder().HttpProxy(proxy).BuildFuture(exchangeName)
 		} else {
 			spotApi = builder.NewAPIBuilder().HttpProxy(proxy).Build(exchangeName)
-			isSpot = true
 		}
 		direct = true
 	}
