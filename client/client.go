@@ -45,6 +45,11 @@ func NewClient(exchangeName, currencyPair, contractType string, c *market_center
 		isSpot:       isSpot,
 	}
 }
+
+func (c *Client) Name() string {
+	return c.ExchangeName
+}
+
 func (c *Client) GetTicker() *goex.Ticker {
 	var tick *goex.Ticker
 	var err error
