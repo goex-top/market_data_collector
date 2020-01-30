@@ -8,6 +8,7 @@ go:          # 语言版本号
 script:      # 执行的脚步，但是go默认会执行下面的这些命令的，所以可以不用写
   #- go get -v
   - ls
+  - export GO111MODULE=on
   - echo $GOPATH
   - echo $PWD
   - cd $GOPATH/src/github.com/goex-top/market_data_collector
