@@ -28,7 +28,7 @@ func GetAllFileName(inputPath, suffix string) []string {
 	return files
 }
 
-func CompressAllCsv(inputPath, dest string) error {
+func CompressAllCsv(inputPath, timestamp, dest string) error {
 	csvFiles := make([]*os.File, 0)
 	finfos, err := ioutil.ReadDir(inputPath)
 	if err != nil {
@@ -40,7 +40,7 @@ func CompressAllCsv(inputPath, dest string) error {
 		if fi.IsDir() {
 			continue
 		}
-		if strings.HasSuffix(fi.Name(), "csv") {
+		if strings.HasSuffix(fi.Name(), "csv") && strings.Contains(fi.Name(), timestamp) {
 			log.Printf("%s\n", fi.Name())
 
 			file, err1 := os.OpenFile(inputPath+"/"+fi.Name(), os.O_RDONLY, 666)
