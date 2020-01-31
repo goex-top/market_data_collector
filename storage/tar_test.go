@@ -1,12 +1,12 @@
 package storage
 
 import (
-	"fmt"
+	"log"
 	"testing"
 )
 
 func TestGetAllFileName(t *testing.T) {
-	csvs := GetAllFileName("../csv/", "csv")
+	csvs := GetSrcFileName("../csv/", "csv")
 	for _, v := range csvs {
 		log.Println(v)
 		//t.Log(os.Remove("../csv/" + v))
@@ -14,5 +14,5 @@ func TestGetAllFileName(t *testing.T) {
 }
 
 func TestCompressAllCsv(t *testing.T) {
-	CompressAllCsv("../csv", "../tar/aaa.tar.gz")
+	CompressFile("../csv", []string{"2006-01-02"}, "../tar/aaa.tar.gz")
 }

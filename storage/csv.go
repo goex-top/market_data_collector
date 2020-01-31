@@ -9,7 +9,6 @@ import (
 	goex "github.com/nntaoli-project/GoEx"
 	"log"
 	"os"
-	"strings"
 	"time"
 )
 
@@ -171,6 +170,28 @@ func (s *CsvStorage) Close() {
 	}
 }
 
+func (s *CsvStorage) compress(fileTimestamp time.Time) {
+	ts := fileTimestamp.Format("2006-01-02")
+	src := fmt.Sprintf("%s_%s_%s.csv", s.exchangeName, s.pair, ts)
+	dst := fmt.Sprintf("%s/%s_%s_%s.tar.gz", s.outputPath, s.exchangeName, s.pair, ts)
+
+	csvs := GetSrcFileName(s.prefix, src)
+	log.Println("start to compress *.csv to *.tar.gz, ts:", ts)
+	err := CompressFile(s.prefix, csvs, dst)
+	if err != nil {
+		log.Println(err)
+		return
+	}
+	for _, v := range csvs {
+		err := os.Remove(s.prefix + "/" + v)
+		if err != nil {
+			log.Printf("remove file %s fail:%s\n", s.prefix+"/"+v, err.Error())
+		} else {
+			log.Printf("remove file %s success\n", s.prefix+"/"+v)
+		}
+	}
+}
+
 func (s *CsvStorage) reNewFile() {
 	now := time.Now()
 	if now.Day() == s.fileTimestamp.Day() {
@@ -178,23 +199,7 @@ func (s *CsvStorage) reNewFile() {
 	}
 	s.Close()
 	log.Printf("now day:%d, file timestamp day:%d", now.Day(), s.fileTimestamp.Day())
-	csvs := GetAllFileName(s.prefix, "csv")
-	go func(fileTimestamp time.Time) {
-		ts := fileTimestamp.Format("2006-01-02")
-		log.Println("start to compress *.csv to *.tar.gz, ts:", ts)
-		CompressAllCsv(s.prefix, ts, fmt.Sprintf("%s/%s_%s_%s.tar.gz", s.outputPath, s.exchangeName, s.pair, ts))
-		for _, v := range csvs {
-			if !strings.Contains(v, ts) {
-				continue
-			}
-			err := os.Remove(s.prefix + "/" + v)
-			if err != nil {
-				log.Printf("remove file %s fail:%s\n", s.prefix+"/"+v, err.Error())
-			} else {
-				log.Printf("remove file %s success\n", s.prefix+"/"+v)
-			}
-		}
-	}(s.fileTimestamp)
+	go s.compress(s.fileTimestamp)
 
 	s.fileTimestamp = now
 

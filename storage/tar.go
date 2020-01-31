@@ -3,6 +3,7 @@ package storage
 import (
 	"archive/tar"
 	"compress/gzip"
+	"errors"
 	"io"
 	"io/ioutil"
 	"log"
@@ -10,7 +11,7 @@ import (
 	"strings"
 )
 
-func GetAllFileName(inputPath, suffix string) []string {
+func GetSrcFileName(inputPath, filter string) []string {
 	files := make([]string, 0)
 	finfos, err := ioutil.ReadDir(inputPath)
 	if err != nil {
@@ -21,34 +22,29 @@ func GetAllFileName(inputPath, suffix string) []string {
 		if fi.IsDir() {
 			continue
 		}
-		if strings.HasSuffix(fi.Name(), "csv") {
+		if strings.Contains(fi.Name(), filter) {
 			files = append(files, fi.Name())
 		}
 	}
 	return files
 }
 
-func CompressAllCsv(inputPath, timestamp, dest string) error {
+func CompressFile(inputPath string, src []string, dest string) error {
 	csvFiles := make([]*os.File, 0)
-	finfos, err := ioutil.ReadDir(inputPath)
-	if err != nil {
-		log.Printf("err : %s \n", err)
-		return err
+	if len(src) == 0 {
+		log.Println("no file will compress")
+		return errors.New("no file will compress")
 	}
 
-	for _, fi := range finfos {
-		if fi.IsDir() {
+	for _, fi := range src {
+		log.Printf("%s\n", fi)
+
+		file, err1 := os.OpenFile(inputPath+"/"+fi, os.O_RDONLY, 666)
+		if err1 != nil {
+			log.Printf("open %s error:%v", inputPath+fi, err1)
 			continue
 		}
-		if strings.HasSuffix(fi.Name(), "csv") && strings.Contains(fi.Name(), timestamp) {
-			log.Printf("%s\n", fi.Name())
-
-			file, err1 := os.OpenFile(inputPath+"/"+fi.Name(), os.O_RDONLY, 666)
-			if err1 != nil {
-				log.Printf("open %s error:%v", inputPath+fi.Name(), err1)
-			}
-			csvFiles = append(csvFiles, file)
-		}
+		csvFiles = append(csvFiles, file)
 	}
 
 	return Compress(csvFiles, dest)
