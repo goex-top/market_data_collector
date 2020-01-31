@@ -56,9 +56,9 @@ func main() {
 	for _, v := range cfg.Subs {
 		sto := storage.NewCsvStorage(ctx, v.ExchangeName, v.CurrencyPair, v.Flag, "csv", "tar")
 		go sto.SaveWorker()
-		c := &client.Client{}
+		cl := &client.Client{}
 		if v.Direct {
-			c = client.NewClient(v.ExchangeName, v.CurrencyPair, "", nil)
+			cl = client.NewClient(v.ExchangeName, v.CurrencyPair, "", nil)
 		} else {
 			mccc := mcc.NewClient()
 			isSpot := market_center.IsFutureExchange(v.ExchangeName)
@@ -76,10 +76,10 @@ func main() {
 					mccc.SubscribeFutureTicker(v.ExchangeName, v.ContractType, v.CurrencyPair, v.Period)
 				}
 			}
-			c = client.NewClient(v.ExchangeName, v.CurrencyPair, "", mccc)
+			cl = client.NewClient(v.ExchangeName, v.CurrencyPair, "", mccc)
 		}
 
-		collector.NewCollector(ctx, c, v.Period, v.Flag, sto)
+		collector.NewCollector(ctx, cl, v.Period, v.Flag, sto)
 	}
 
 	exitSignal := make(chan os.Signal, 1)
