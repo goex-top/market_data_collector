@@ -16,7 +16,7 @@ BINARY_UNIX=$(BINARY_NAME)_unix
 
 all: build
 build:
-	$(GOMOD) tidy
+#	$(GOMOD) tidy
 	$(GOBUILD) -o $(BINARY_NAME) -v -ldflags '-s -w'
 test:
 	$(GOTEST) -v ./...
