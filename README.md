@@ -1,7 +1,56 @@
 # Market Data Collector
-![HitCount](http://hits.dwyl.io/goex-top/market_data_collector.svg)
+![HitCount](http://hits.dwyl.io/goex-top/market_data_collector.svg) 
+[![Build Status](https://travis-ci.org/goex-top/market_data_collector.png)](https://travis-ci.org/goex-top/market_data_collector)
+
 
 Collect market data for quant analysis
+## Quick Start
+### Installation
+
+`go install github.com/goex-top/market_data_collector`
+
+### Configure
+create a configure file `config.json` 
+```json
+{
+  "subs": [
+    {
+      "exchange_name": "binance.com",
+      "currency_pair": "BTC_USDT",
+      "period": 100,
+      "flag": 1,
+      "direct": true
+    },
+    {
+      "exchange_name": "fcoin.com",
+      "currency_pair": "BTC_USDT",
+      "period": 100,
+      "flag": 1,
+      "direct": true
+    },
+    {
+      "exchange_name": "okex.com",
+      "currency_pair": "BTC_USDT",
+      "period": 100,
+      "flag": 1,
+      "direct": true
+    },
+    {
+      "exchange_name": "huobi.pro",
+      "currency_pair": "BTC_USDT",
+      "period": 100,
+      "flag": 1,
+      "direct": true
+    }
+  ],
+  "store": {
+    "csv": true
+  },
+  "market_center_path": "/tmp/goex.market.center"
+}
+```
+### Run
+`market_data_collector -c config.json`
 
 ## Storage
 Store daily data in different `csv` files in `csv` folder, compress it to `tar` folder
@@ -26,6 +75,28 @@ Store daily data in different `csv` files in `csv` folder, compress it to `tar` 
 ├── okex.com_BTC_USDT_2020-01-24.tar.gz
 └── okex.com_BTC_USDT_2020-01-25.tar.gz
 ```
+
+## Configure
+```
+{
+  "subs": [                               // subscribs, it's a array for multi-exchanges
+    {
+      "exchange_name": "binance.com",     // exchange name, ref to https://github.com/goex-top/market_center#support-exchanges
+      "currency_pair": "BTC_USDT",        // pair with `_`
+      "period": 100,                      // period
+      "flag": 2,                          // flag, is a mask for market, 1: depth, 2: ticker, 3: depth and ticker
+      "direct": true                      // market data from exchange directly or not, if false, it will get market data from market center
+    }
+  ],
+  "store": {                              // storage
+    "csv": true                           // store data to csv
+  },
+  "market_center_path": "/tmp/goex.market.center"   // market center path
+}
+
+```
+## Flag
+only one command flag `-c` to input configure file, for example `market_data_collector -c config.json`
 
 ## Format
 ### ticker
@@ -55,6 +126,7 @@ Store daily data in different `csv` files in `csv` folder, compress it to `tar` 
 * ~~Kline~~
 
 ## TODO
+* SQLite
 * InfluxDB
 
 ### 观星者
