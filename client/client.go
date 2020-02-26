@@ -3,8 +3,8 @@ package client
 import (
 	"github.com/goex-top/market_center"
 	"github.com/goex-top/market_center_client"
-	goex "github.com/nntaoli-project/GoEx"
-	"github.com/nntaoli-project/GoEx/builder"
+	"github.com/nntaoli-project/goex"
+	"github.com/nntaoli-project/goex/builder"
 	"os"
 )
 

@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"github.com/goex-top/market_center"
 	jsoniter "github.com/json-iterator/go"
-	goex "github.com/nntaoli-project/GoEx"
+	"github.com/nntaoli-project/goex"
 	"log"
 	"os"
 	"time"
