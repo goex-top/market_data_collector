@@ -13,8 +13,6 @@ func NewCollector(ctx context.Context, c *client.Client, period int64, flag mark
 	log.Printf("(%s) %s new collector with flag[%d]\n", c.ExchangeName, c.CurrencyPair, flag)
 	go func() {
 		tick := time.NewTicker(time.Millisecond * time.Duration(period))
-		//var lastDepthUtime time.Time
-		//var lastTickerDate = uint64(0)
 		for {
 			select {
 			case <-ctx.Done():
@@ -24,13 +22,10 @@ func NewCollector(ctx context.Context, c *client.Client, period int64, flag mark
 				if flag&market_center.DataFlag_Depth != 0 {
 					depth := c.GetDepth()
 					if depth != nil {
-						if depth.UTime.UnixNano() == -6795364578871345152 {
+						if depth.UTime.IsZero() {
 							depth.UTime = time.Now()
 						}
-						//if !lastDepthUtime.Equal(depth.UTime) {
-						//	lastDepthUtime = depth.UTime
 						csvStore.SaveDepth(depth)
-						//}
 					}
 				}
 
@@ -40,10 +35,7 @@ func NewCollector(ctx context.Context, c *client.Client, period int64, flag mark
 						if ticker.Date == 0 {
 							ticker.Date = uint64(time.Now().UnixNano() / int64(time.Millisecond))
 						}
-						//if ticker.Date != lastTickerDate {
-						//	lastTickerDate = ticker.Date
 						csvStore.SaveTicker(ticker)
-						//}
 					}
 				}
 			}

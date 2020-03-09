@@ -1,0 +1,16 @@
+---
+subs:
+  - exchangename: binance.com
+    currency_pair: BTC_USDT
+    period: 100
+    flag: 2
+    direct: true
+  - exchange_name: binance.com_swap
+    currency_pair: BTC_USDT
+
+    period: 100
+    flag: 2
+    direct: true
+store:
+  csv: true
+market_center_path: "/tmp/goex.market.center"

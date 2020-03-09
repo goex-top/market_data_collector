@@ -17,6 +17,7 @@ var json = jsoniter.ConfigCompatibleWithStandardLibrary
 type CsvStorage struct {
 	exchangeName   string
 	pair           string
+	contractType   string
 	flag           market_center.DataFlag
 	prefix         string
 	outputPath     string
@@ -37,6 +38,7 @@ func NewCsvStorage(
 	ctx context.Context,
 	exchangeName string,
 	pair string,
+	contractType string,
 	flag market_center.DataFlag,
 	prefix string,
 	outputPath string,
@@ -56,7 +58,7 @@ func NewCsvStorage(
 	isNew := false
 
 	if flag&market_center.DataFlag_Depth != 0 {
-		isNew, depthFile = openFile(fmt.Sprintf("%s/depth_%s_%s_%s.csv", prefix, exchangeName, pair, ts))
+		isNew, depthFile = openFile(fmt.Sprintf("%s/depth_%s_%s_%s%s.csv", prefix, exchangeName, pair, contractType, ts))
 		depthCsv = csv.NewWriter(depthFile)
 		if isNew {
 			data := []string{"t", "a", "b"}
@@ -67,7 +69,7 @@ func NewCsvStorage(
 	}
 
 	if flag&market_center.DataFlag_Ticker != 0 {
-		isNew, tickerFile = openFile(fmt.Sprintf("%s/ticker_%s_%s_%s.csv", prefix, exchangeName, pair, ts))
+		isNew, tickerFile = openFile(fmt.Sprintf("%s/ticker_%s_%s_%s%s.csv", prefix, exchangeName, pair, contractType, ts))
 		tickerCsv = csv.NewWriter(tickerFile)
 		if isNew {
 			data := []string{"t", "b", "s", "h", "l", "v"}
@@ -78,7 +80,7 @@ func NewCsvStorage(
 	}
 
 	if flag&market_center.DataFlag_Kline != 0 {
-		isNew, klineFile = openFile(fmt.Sprintf("%s/depth_%s_%s_%s.csv", prefix, exchangeName, pair, ts))
+		isNew, klineFile = openFile(fmt.Sprintf("%s/depth_%s_%s_%s%s.csv", prefix, exchangeName, pair, contractType, ts))
 		klineCsv = csv.NewWriter(klineFile)
 		if isNew {
 			data := []string{"t", "o", "h", "l", "c", "v"}
@@ -92,6 +94,7 @@ func NewCsvStorage(
 		ctx:            ctx,
 		exchangeName:   exchangeName,
 		pair:           pair,
+		contractType:   contractType,
 		flag:           flag,
 		prefix:         prefix,
 		outputPath:     outputPath,
@@ -207,7 +210,7 @@ func (s *CsvStorage) reNewFile() {
 	isNew := false
 
 	if s.flag&market_center.DataFlag_Depth != 0 {
-		isNew, s.depthFile = openFile(fmt.Sprintf("%s/depth_%s_%s_%s.csv", s.prefix, s.exchangeName, s.pair, ts))
+		isNew, s.depthFile = openFile(fmt.Sprintf("%s/depth_%s_%s_%s%s.csv", s.prefix, s.exchangeName, s.pair, s.contractType, ts))
 		s.depthCsv = csv.NewWriter(s.depthFile)
 		if isNew {
 			data := []string{"t", "a", "b"}
@@ -217,7 +220,7 @@ func (s *CsvStorage) reNewFile() {
 	}
 
 	if s.flag&market_center.DataFlag_Ticker != 0 {
-		isNew, s.tickerFile = openFile(fmt.Sprintf("%s/ticker_%s_%s_%s.csv", s.prefix, s.exchangeName, s.pair, ts))
+		isNew, s.tickerFile = openFile(fmt.Sprintf("%s/ticker_%s_%s_%s%s.csv", s.prefix, s.exchangeName, s.pair, s.contractType, ts))
 		s.tickerCsv = csv.NewWriter(s.tickerFile)
 		if isNew {
 			data := []string{"t", "b", "s", "h", "l", "v"}
@@ -227,7 +230,7 @@ func (s *CsvStorage) reNewFile() {
 	}
 
 	if s.flag&market_center.DataFlag_Kline != 0 {
-		isNew, s.klineFile = openFile(fmt.Sprintf("%s/depth_%s_%s_%s.csv", s.prefix, s.exchangeName, s.pair, ts))
+		isNew, s.klineFile = openFile(fmt.Sprintf("%s/depth_%s_%s_%s%s.csv", s.prefix, s.exchangeName, s.pair, s.contractType, ts))
 		s.klineCsv = csv.NewWriter(s.klineFile)
 		if isNew {
 			data := []string{"t", "o", "h", "l", "c", "v"}

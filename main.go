@@ -4,13 +4,13 @@ import (
 	"context"
 	"flag"
 	"fmt"
-	"github.com/beaquant/utils/json_file"
 	"github.com/goex-top/market_center"
 	mcc "github.com/goex-top/market_center_client"
 	"github.com/goex-top/market_data_collector/client"
 	"github.com/goex-top/market_data_collector/collector"
 	"github.com/goex-top/market_data_collector/config"
 	"github.com/goex-top/market_data_collector/storage"
+	"github.com/jinzhu/configor"
 	"log"
 	"os"
 	"os/signal"
@@ -33,7 +33,7 @@ Options:
 func main() {
 	var c string
 	var help bool
-	flag.StringVar(&c, "c", "config.json", "set configuration `json file`")
+	flag.StringVar(&c, "c", "config.yml", "set configuration `json/yml file`")
 	flag.BoolVar(&help, "h", false, "this help")
 	flag.Usage = usage
 
@@ -42,8 +42,8 @@ func main() {
 		flag.Usage()
 		return
 	}
+	err := configor.Load(&cfg, c)
 
-	err := json_file.Load(c, &cfg)
 	if err != nil {
 		panic(err)
 	}
@@ -51,14 +51,14 @@ func main() {
 	if !cfg.Store.Csv {
 		panic("currently only support csv, please check your configure")
 	}
-	log.Println(cfg)
+	//log.Println(cfg)
 	ctx, cancel := context.WithCancel(context.Background())
 	for _, v := range cfg.Subs {
-		sto := storage.NewCsvStorage(ctx, v.ExchangeName, v.CurrencyPair, v.Flag, "csv", "tar")
+		sto := storage.NewCsvStorage(ctx, v.ExchangeName, v.CurrencyPair, v.ContractType, v.Flag, "csv", "tar")
 		go sto.SaveWorker()
 		cl := &client.Client{}
 		if v.Direct {
-			cl = client.NewClient(v.ExchangeName, v.CurrencyPair, "", nil)
+			cl = client.NewClient(v.ExchangeName, v.CurrencyPair, v.ContractType, nil)
 		} else {
 			mccc := mcc.NewClient()
 			isSpot := market_center.IsFutureExchange(v.ExchangeName)
@@ -76,7 +76,7 @@ func main() {
 					mccc.SubscribeFutureTicker(v.ExchangeName, v.ContractType, v.CurrencyPair, v.Period)
 				}
 			}
-			cl = client.NewClient(v.ExchangeName, v.CurrencyPair, "", mccc)
+			cl = client.NewClient(v.ExchangeName, v.CurrencyPair, v.ContractType, mccc)
 		}
 
 		collector.NewCollector(ctx, cl, v.Period, v.Flag, sto)
