@@ -11,7 +11,7 @@ import (
 	"strings"
 )
 
-func GetSrcFileName(inputPath, filter string) []string {
+func GetSrcFileName(inputPath string, filters []string) []string {
 	files := make([]string, 0)
 	finfos, err := ioutil.ReadDir(inputPath)
 	if err != nil {
@@ -22,7 +22,13 @@ func GetSrcFileName(inputPath, filter string) []string {
 		if fi.IsDir() {
 			continue
 		}
-		if strings.Contains(fi.Name(), filter) {
+		notMatch := false
+		for _, filter := range filters {
+			if !strings.Contains(fi.Name(), filter) {
+				notMatch = true
+			}
+		}
+		if !notMatch {
 			files = append(files, fi.Name())
 		}
 	}

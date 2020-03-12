@@ -175,10 +175,11 @@ func (s *CsvStorage) Close() {
 
 func (s *CsvStorage) compress(fileTimestamp time.Time) {
 	ts := fileTimestamp.Format("2006-01-02")
-	src := fmt.Sprintf("%s_%s_%s.csv", s.exchangeName, s.pair, ts)
+	//src := fmt.Sprintf("%s_%s_%s.csv", s.exchangeName, s.pair, ts)
+	filters := []string{s.exchangeName, s.pair, ts, ".csv"}
 	dst := fmt.Sprintf("%s/%s_%s_%s.tar.gz", s.outputPath, s.exchangeName, s.pair, ts)
 
-	csvs := GetSrcFileName(s.prefix, src)
+	csvs := GetSrcFileName(s.prefix, filters)
 	log.Println("start to compress *.csv to *.tar.gz, ts:", ts)
 	err := CompressFile(s.prefix, csvs, dst)
 	if err != nil {

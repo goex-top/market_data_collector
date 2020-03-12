@@ -1,7 +1,7 @@
 {
   "subs": [
     {
-      "exchangename": "binance.com",
+      "exchange_name": "binance.com",
       "currency_pair": "BTC_USDT",
       "period": 100,
       "flag": 3,
