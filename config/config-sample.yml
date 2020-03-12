@@ -4,13 +4,12 @@ subs:
     currency_pair: BTC_USDT
     period: 100
     flag: 2
-    direct: true
-  - exchange_name: binance.com_swap
+  - exchange_name: okex.com_swap
     currency_pair: BTC_USDT
-
+    contract_type: quarter
     period: 100
     flag: 2
-    direct: true
+with_market_center: true
 store:
-  csv: true
+  csv: false
 market_center_path: "/tmp/goex.market.center"

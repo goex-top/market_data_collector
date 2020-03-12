@@ -8,7 +8,6 @@ type Subscribe struct {
 	ContractType string                 `json:"contract_type,omitempty" yaml:"contract_type" default:""`
 	Period       int64                  `json:"period" yaml:"period" default:"100"`
 	Flag         market_center.DataFlag `json:"flag" yaml:"flag" default:"1"`
-	Direct       bool                   `json:"direct" yaml:"direct" default:"true"`
 }
 
 type Storage struct {
@@ -16,7 +15,8 @@ type Storage struct {
 	// TBD
 }
 type Config struct {
-	Subs             []Subscribe `json:"subs" yaml:"subs" default:""`
+	Subs             []Subscribe `json:"subs" yaml:"subs" default:"subs"`
 	Store            Storage     `json:"store" yaml:"store" default:""`
+	WithMarketCenter bool        `json:"with_market_center" yaml:"with_market_center" `
 	MarketCenterPath string      `json:"market_center_path" yaml:"market_center_path" default:"/tmp/goex.market.center"`
 }

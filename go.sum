@@ -22,6 +22,8 @@ github.com/goex-top/market_center v1.0.3-alpha.0.20200226162439-93dd6ef62414 h1:
 github.com/goex-top/market_center v1.0.3-alpha.0.20200226162439-93dd6ef62414/go.mod h1:CIfNWaFhp8974PMDmCRvTiYT8pNlBpNio845Elyk62I=
 github.com/goex-top/market_center v1.0.4-alpha h1:BbvNFG/Zyvy75xV4gkQQDybX/tR4n96Tuew1oXhJ7qk=
 github.com/goex-top/market_center v1.0.4-alpha/go.mod h1:SDGodgBQaxbOLvX3Ml+AJSfn7wr/iuI+fnDh56b2BxM=
+github.com/goex-top/market_center v1.0.4-alpha.0.20200312042336-64c6f42e9c5e h1:inQBvJjZwEMvpVjL3R7MX964DVWT4tJUHGFn0p5j1cM=
+github.com/goex-top/market_center v1.0.4-alpha.0.20200312042336-64c6f42e9c5e/go.mod h1:SDGodgBQaxbOLvX3Ml+AJSfn7wr/iuI+fnDh56b2BxM=
 github.com/goex-top/market_center_client v0.0.0-20200226163509-6f4586168c51 h1:SDSn8o2HGP+qbAFr7Uw/7L2dfimNKfvVv4i7A6VRXyg=
 github.com/goex-top/market_center_client v0.0.0-20200226163509-6f4586168c51/go.mod h1:+VtsIyauvECj51g8iFOODEw08FZpiFUeoOFQohkGxTw=
 github.com/golang/freetype v0.0.0-20170609003504-e2365dfdc4a0/go.mod h1:E/TSTwGwJL78qG/PmXZO1EjYhfJinVAhrmmHX6Z8B9k=

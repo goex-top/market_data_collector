@@ -4,12 +4,12 @@
       "exchange_name": "binance.com",
       "currency_pair": "BTC_USDT",
       "period": 100,
-      "flag": 2,
-      "direct": true
+      "flag": 2
     }
   ],
   "store": {
     "csv": true
   },
+  "with_market_center": true,
   "market_center_path": "/tmp/goex.market.center"
 }

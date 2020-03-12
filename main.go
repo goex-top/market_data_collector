@@ -57,7 +57,7 @@ func main() {
 		sto := storage.NewCsvStorage(ctx, v.ExchangeName, v.CurrencyPair, v.ContractType, v.Flag, "csv", "tar")
 		go sto.SaveWorker()
 		cl := &client.Client{}
-		if v.Direct {
+		if !cfg.WithMarketCenter {
 			cl = client.NewClient(v.ExchangeName, v.CurrencyPair, v.ContractType, nil)
 		} else {
 			mccc := mcc.NewClient()

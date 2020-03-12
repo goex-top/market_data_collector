@@ -3,3 +3,5 @@
 /*.csv
 /csv/*.csv
 /tar/*.tar.gz
+/config.json
+/config.yml

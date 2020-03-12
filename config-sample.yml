@@ -4,12 +4,21 @@ subs:
     currency_pair: BTC_USDT
     period: 100
     flag: 2
-    direct: true
   - exchange_name: binance.com_swap
     currency_pair: BTC_USDT
     period: 100
     flag: 2
     direct: true
+  - exchange_name: huobi.pro
+    currency_pair: BTC_USDT
+    period: 100
+    flag: 1
+  - exchange_name: hbdm.com
+    currency_pair: BTC_USDT
+    contract_type: quarter
+    period: 100
+    flag: 1
 store:
   csv: true
+with_market_center: true
 market_center_path: "/tmp/goex.market.center"
