@@ -3,6 +3,8 @@ github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03
 github.com/Kucoin/kucoin-go-sdk v1.2.2 h1:q3w6gpQ9fGxZ77aWscdXYLwWeCBLJEUi3wi/1F0Qhz4=
 github.com/Kucoin/kucoin-go-sdk v1.2.2/go.mod h1:Wz3fTuM5gIct9chN6H6OBCXbku10XEcAjH5g/FL3wIY=
 github.com/ajstarks/svgo v0.0.0-20180226025133-644b8db467af/go.mod h1:K08gAheRH3/J6wwsYMMT4xOr94bZjxIelGM0+d/wbFw=
+github.com/beaquant/goex v1.0.5-0.20200308030346-6260b54032ed h1:4hb3buoRcTxPe0cRPGiIfeQ6sWusCMTaZ9Jn0ruqc+0=
+github.com/beaquant/goex v1.0.5-0.20200308030346-6260b54032ed/go.mod h1:dhUT0OjkjEyZY8Zj4pu6BF3ZLNRdm5myacC3JxxJWHo=
 github.com/beaquant/utils v0.0.0-20200214111051-cad84a41cb41 h1:iJmblp0UKoV+UAOOdJCsbFEuEcjBjnrMcnuWTlTb1E8=
 github.com/beaquant/utils v0.0.0-20200214111051-cad84a41cb41/go.mod h1:bXZZrZJ0VINxFDu98EGU0Aolf7JbkcvC+rZQDNn6eYE=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
@@ -56,6 +58,7 @@ github.com/modern-go/reflect2 v0.0.0-20180701023420-4b7aa43c6742 h1:Esafd1046DLD
 github.com/modern-go/reflect2 v0.0.0-20180701023420-4b7aa43c6742/go.mod h1:bx2lNnkwVCuqBIxFjflWJWanXIb3RllmbCylyMrvgv0=
 github.com/nntaoli-project/goex v1.0.9-0.20200226142801-215edd0592fc h1:lB4Kz48ksK1QvgrxtMAtBvVSTt0yWvQ7+AnOkYMa998=
 github.com/nntaoli-project/goex v1.0.9-0.20200226142801-215edd0592fc/go.mod h1:dhUT0OjkjEyZY8Zj4pu6BF3ZLNRdm5myacC3JxxJWHo=
+github.com/nntaoli-project/goex v1.0.9-0.20200309082036-92aa51f10668/go.mod h1:dhUT0OjkjEyZY8Zj4pu6BF3ZLNRdm5myacC3JxxJWHo=
 github.com/nntaoli-project/goex v1.1.0 h1:IoB5q8HvW9ZdGub4a8pV5Mc3bFWfGmQ2fQB2hUX6iH4=
 github.com/nntaoli-project/goex v1.1.0/go.mod h1:dhUT0OjkjEyZY8Zj4pu6BF3ZLNRdm5myacC3JxxJWHo=
 github.com/nubo/jwt v0.0.0-20150918093313-da5b79c3bbaf h1:mP7zQzhCrNQgSdCpxFxyZV/JMHbz4LJsyppAZMQVrI0=

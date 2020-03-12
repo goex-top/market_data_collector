@@ -2,7 +2,7 @@ module github.com/goex-top/market_data_collector
 
 go 1.13
 
-replace github.com/nntaoli-project/GoEx v1.0.10 => github.com/beaquant/GoEx v0.0.0-20200201124602-426e8e503fac
+replace github.com/nntaoli-project/goex v1.1.0 => github.com/beaquant/goex v1.0.5-0.20200308030346-6260b54032ed
 
 require (
 	github.com/beaquant/utils v0.0.0-20200214111051-cad84a41cb41
