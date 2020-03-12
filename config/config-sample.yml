@@ -1,6 +1,6 @@
 ---
 subs:
-  - exchangename: binance.com
+  - exchange_name: binance.com
     currency_pair: BTC_USDT
     period: 100
     flag: 2
@@ -9,7 +9,7 @@ subs:
     contract_type: quarter
     period: 100
     flag: 2
-with_market_center: true
 store:
   csv: false
+with_market_center: true
 market_center_path: "/tmp/goex.market.center"

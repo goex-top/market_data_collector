@@ -4,12 +4,19 @@
       "exchange_name": "binance.com",
       "currency_pair": "BTC_USDT",
       "period": 100,
-      "flag": 2
+      "flag": 3
+    },
+    {
+      "exchange_name": "binance.com_swap",
+      "currency_pair": "BTC_USDT",
+      "contract_type": "swap",
+      "period": 100,
+      "flag": 3
     }
   ],
   "store": {
-    "csv": true
+    "csv": false
   },
-  "with_market_center": true,
+  "with_market_center": false,
   "market_center_path": "/tmp/goex.market.center"
 }

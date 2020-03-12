@@ -10,7 +10,7 @@ Collect market data for quant analysis
 `go install github.com/goex-top/market_data_collector`
 
 ### Configure
-create a configure file `config.json` 
+create a configure file `config.json` , or `config.yml`, ( `cp config-sample.json config.json` or `cp config-sample.yml config.yml` )
 ```json
 {
   "subs": [
@@ -18,53 +18,58 @@ create a configure file `config.json`
       "exchange_name": "binance.com",
       "currency_pair": "BTC_USDT",
       "period": 100,
-      "flag": 1,
-      "direct": true
+      "flag": 3
     },
     {
-      "exchange_name": "fcoin.com",
+      "exchange_name": "binance.com_swap",
       "currency_pair": "BTC_USDT",
+      "contract_type": "swap",
       "period": 100,
-      "flag": 1,
-      "direct": true
-    },
-    {
-      "exchange_name": "okex.com",
-      "currency_pair": "BTC_USDT",
-      "period": 100,
-      "flag": 1,
-      "direct": true
-    },
-    {
-      "exchange_name": "huobi.pro",
-      "currency_pair": "BTC_USDT",
-      "period": 100,
-      "flag": 1,
-      "direct": true
+      "flag": 3
     }
   ],
   "store": {
-    "csv": true
+    "csv": false
   },
+  "with_market_center": false,
   "market_center_path": "/tmp/goex.market.center"
 }
 ```
 
+```yaml
+---
+subs:
+  - exchange_name: binance.com
+    currency_pair: BTC_USDT
+    period: 100
+    flag: 2
+  - exchange_name: okex.com_swap
+    currency_pair: BTC_USDT
+    contract_type: quarter
+    period: 100
+    flag: 2
+with_market_center: true
+store:
+  csv: false
+market_center_path: "/tmp/goex.market.center"
+```
+
 **Description**
+
 ```
 {
-  "subs": [                               // subscribs, it's a array for multi-exchanges
+  "subs": [                                 // subscribs, it's a array for multi-exchanges
     {
-      "exchange_name": "binance.com",     // exchange name, ref to https://github.com/goex-top/market_center#support-exchanges
-      "currency_pair": "BTC_USDT",        // pair with `_`
-      "period": 100,                      // period
-      "flag": 2,                          // flag, is a mask for market, 1: depth, 2: ticker, 3: depth and ticker
-      "direct": true                      // market data from exchange directly or not, if false, it will get market data from market center
+      "exchange_name": "binance.com_swap",  // exchange name, ref to https://github.com/goex-top/market_center#support-exchanges
+      "currency_pair": "BTC_USDT",          // pair with `_`
+      "period": 100,                        // period
+      "flag": 2,                            // flag, is a mask for market, 1: depth, 2: ticker, 3: depth and ticker
     }
   ],
-  "store": {                              // storage
-    "csv": true                           // store data to csv
+  "store": {                                // storage
+    "csv": true                             // store data to csv
   },
+  "with_market_center: true                 // market data from exchange or not, if true, it will get market data from market center
   "market_center_path": "/tmp/goex.market.center"   // market center path
 }
 
