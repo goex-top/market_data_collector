@@ -29,7 +29,12 @@ create a configure file `config.json` , or `config.yml`, ( `cp config-sample.jso
     }
   ],
   "store": {
-    "csv": false
+    "csv": false,
+    "influx_db": true,
+    "influx_db_cfg": {
+      "url": "http://localhost:8086",
+      "database": "market_data"
+    }
   },
   "with_market_center": false,
   "market_center_path": "/tmp/goex.market.center"
@@ -51,6 +56,12 @@ subs:
 with_market_center: true
 store:
   csv: false
+  influx_db: true
+  influx_db_cfg:
+    url: http://localhost:8086
+    database: market_data
+    username: 
+    password:
 market_center_path: "/tmp/goex.market.center"
 ```
 
@@ -68,6 +79,11 @@ market_center_path: "/tmp/goex.market.center"
   ],
   "store": {                                // storage
     "csv": true                             // store data to csv
+    "influx_db": true,                      // store data to influxdb
+    "influx_db_cfg": {
+      "url": "http://localhost:8086",       // influxdb url
+      "database": "market_data"             // influxdb database name
+    }
   },
   "with_market_center: true                 // market data from exchange or not, if true, it will get market data from market center
   "market_center_path": "/tmp/goex.market.center"   // market center path
@@ -83,6 +99,7 @@ only one command flag `-c` to input configure file, for example `market_data_col
 `market_data_collector -c config.json`
 
 ## Storage
+### CSV
 Store daily data in different `csv` files in `csv` folder, compress it to `tar` folder
 
 `csv` folder(older file was removed automatically)
@@ -106,8 +123,8 @@ Store daily data in different `csv` files in `csv` folder, compress it to `tar` 
 └── okex.com_BTC_USDT_2020-01-25.tar.gz
 ```
 
-## Format
-### ticker
+#### Format
+##### ticker
 ![ticker](ticker.png)
 
 |  symbol | type | description |
@@ -119,7 +136,7 @@ Store daily data in different `csv` files in `csv` folder, compress it to `tar` 
 | l  | float | low price |
 | v  | float | volume |
 
-### orderbook
+##### orderbook
 ![orderbook](orderbook.png)
 
 |  symbol | type | description |
@@ -128,6 +145,20 @@ Store daily data in different `csv` files in `csv` folder, compress it to `tar` 
 | a  | array | asks list with size 20, each element is [p,q], p:price, q:qty |
 | b  | array | bids list with size 20, each element is [p,q], p:price, q:qty |
 
+### InfluxDB
+
+influxDB schema
+
+|MEASUREMENT | TAGS | FIELDS|
+|  ----  | ----  | ----  |
+|exchangeName_ticker  | spot=pair    | xxx|
+|exchangeName_kline  | future_contractType=pair  | xxx|
+|exchangeName_depth  | swap=pair    | xxx |
+
+Measurement: Data Feed-Exxhange (configurable)
+TAGS: pair
+FIELDS: timestamp, amount, price, other funding specific fields
+
 ## Support Data
 * Ticker 
 * Depth(Orderbook)
@@ -135,8 +166,5 @@ Store daily data in different `csv` files in `csv` folder, compress it to `tar` 
 
 ## TODO
 * SQLite
-* InfluxDB
 
-### 观星者
 
-![观星者](https://starchart.cc/goex-top/market_data_collector.svg)

@@ -1,4 +1,4 @@
-package storage
+package csv
 
 import (
 	"archive/tar"

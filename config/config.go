@@ -11,7 +11,14 @@ type Subscribe struct {
 }
 
 type Storage struct {
-	Csv bool `json:"csv" yaml:"csv" default:"true"`
+	Csv         bool `json:"csv" yaml:"csv" `
+	InfluxDB    bool `json:"influx_db" yaml:"influx_db" `
+	InfluxDbCfg struct {
+		Url      string `json:"url" yaml:"url" default:"http://localhost:8086"`
+		Database string `json:"database" yaml:"database" default:"market_data"`
+		Username string `json:"username" yaml:"username" default:""`
+		Password string `json:"password" yaml:"password" default:""`
+	} `json:"influx_db_cfg" yaml:"influx_db_cfg"`
 	// TBD
 }
 type Config struct {

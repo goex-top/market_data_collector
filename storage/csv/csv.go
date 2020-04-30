@@ -1,4 +1,4 @@
-package storage
+package csv
 
 import (
 	"context"
@@ -126,12 +126,12 @@ func (s *CsvStorage) SaveTicker(ticker *goex.Ticker) {
 	s.saveTickerChan <- *ticker
 }
 
-func (s *CsvStorage) SaveKline(kline goex.Kline) {
+func (s *CsvStorage) SaveKline(kline *goex.Kline) {
 	if s.saveKlineChan == nil {
 		return
 	}
 
-	s.saveKlineChan <- kline
+	s.saveKlineChan <- *kline
 }
 
 func openFile(fileName string) (bool, *os.File) {
@@ -171,6 +171,9 @@ func (s *CsvStorage) Close() {
 		s.klineCsv.Flush()
 		s.klineFile.Close()
 	}
+	//close(s.saveDepthChan)
+	//close(s.saveTickerChan)
+	//close(s.saveKlineChan)
 }
 
 func (s *CsvStorage) compress(fileTimestamp time.Time) {

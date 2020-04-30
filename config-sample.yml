@@ -11,5 +11,9 @@ subs:
     flag: 2
 store:
   csv: false
+  influx_db: true
+  influx_db_cfg:
+    url: http://localhost:8086
+    database: market_data
 with_market_center: true
 market_center_path: "/tmp/goex.market.center"

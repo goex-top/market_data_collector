@@ -10,6 +10,8 @@ import (
 	"github.com/goex-top/market_data_collector/collector"
 	"github.com/goex-top/market_data_collector/config"
 	"github.com/goex-top/market_data_collector/storage"
+	"github.com/goex-top/market_data_collector/storage/csv"
+	"github.com/goex-top/market_data_collector/storage/influxdb"
 	"github.com/jinzhu/configor"
 	"log"
 	"os"
@@ -48,13 +50,19 @@ func main() {
 		panic(err)
 	}
 
-	if !cfg.Store.Csv {
+	if cfg.Store.Csv == cfg.Store.InfluxDB {
 		panic("currently only support csv, please check your configure")
 	}
 	//log.Println(cfg)
 	ctx, cancel := context.WithCancel(context.Background())
 	for _, v := range cfg.Subs {
-		sto := storage.NewCsvStorage(ctx, v.ExchangeName, v.CurrencyPair, v.ContractType, v.Flag, "csv", "tar")
+		var sto storage.Storage
+		if cfg.Store.Csv {
+			sto = csv.NewCsvStorage(ctx, v.ExchangeName, v.CurrencyPair, v.ContractType, v.Flag, "output/csv", "output/tar")
+		}
+		if cfg.Store.InfluxDB {
+			sto = influxdb.NewInfluxdb(ctx, v.ExchangeName, v.CurrencyPair, v.ContractType, cfg.Store.InfluxDbCfg.Url, cfg.Store.InfluxDbCfg.Database, cfg.Store.InfluxDbCfg.Username, cfg.Store.InfluxDbCfg.Password)
+		}
 		go sto.SaveWorker()
 		cl := &client.Client{}
 		if !cfg.WithMarketCenter {

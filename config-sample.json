@@ -15,7 +15,12 @@
     }
   ],
   "store": {
-    "csv": false
+    "csv": false,
+    "influx_db": true,
+    "influx_db_cfg": {
+      "url": "http://localhost:8086",
+      "database": "market_data"
+    }
   },
   "with_market_center": false,
   "market_center_path": "/tmp/goex.market.center"
