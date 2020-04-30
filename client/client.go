@@ -11,7 +11,7 @@ import (
 type Client struct {
 	ExchangeName string
 	CurrencyPair string
-	contractType string
+	ContractType string
 	spotApi      goex.API
 	futureApi    goex.FutureRestAPI
 	c            *mcc.Client
@@ -38,7 +38,7 @@ func NewClient(exchangeName, currencyPair, contractType string, c *mcc.Client) *
 		CurrencyPair: currencyPair,
 		spotApi:      spotApi,
 		futureApi:    futureApi,
-		contractType: contractType,
+		ContractType: contractType,
 		c:            c,
 		isDirect:     direct,
 		isSpot:       isSpot,
@@ -62,13 +62,13 @@ func (c *Client) GetTicker() *goex.Ticker {
 		if c.isSpot {
 			tick, err = c.spotApi.GetTicker(goex.NewCurrencyPair2(c.CurrencyPair))
 		} else {
-			tick, err = c.futureApi.GetFutureTicker(goex.NewCurrencyPair2(c.CurrencyPair), c.contractType)
+			tick, err = c.futureApi.GetFutureTicker(goex.NewCurrencyPair2(c.CurrencyPair), c.ContractType)
 		}
 	} else {
 		if c.isSpot {
 			tick, err = c.c.GetSpotTicker(c.ExchangeName, c.CurrencyPair)
 		} else {
-			tick, err = c.c.GetFutureTicker(c.ExchangeName, c.contractType, c.CurrencyPair)
+			tick, err = c.c.GetFutureTicker(c.ExchangeName, c.ContractType, c.CurrencyPair)
 		}
 	}
 	if err != nil {
@@ -84,13 +84,13 @@ func (c *Client) GetDepth() *goex.Depth {
 		if c.isSpot {
 			depth, err = c.spotApi.GetDepth(20, goex.NewCurrencyPair2(c.CurrencyPair))
 		} else {
-			depth, err = c.futureApi.GetFutureDepth(goex.NewCurrencyPair2(c.CurrencyPair), c.contractType, 20)
+			depth, err = c.futureApi.GetFutureDepth(goex.NewCurrencyPair2(c.CurrencyPair), c.ContractType, 20)
 		}
 	} else {
 		if c.isSpot {
 			depth, err = c.c.GetSpotDepth(c.ExchangeName, c.CurrencyPair)
 		} else {
-			depth, err = c.c.GetFutureDepth(c.ExchangeName, c.contractType, c.CurrencyPair)
+			depth, err = c.c.GetFutureDepth(c.ExchangeName, c.ContractType, c.CurrencyPair)
 		}
 	}
 	if err != nil {

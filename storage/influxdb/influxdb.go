@@ -55,9 +55,9 @@ func NewInfluxdb(ctx context.Context,
 		log.Fatal(err)
 	}
 	s.tag = make(map[string]string)
-	if strings.Contains(exchangeName, "future") {
+	if strings.Contains(exchangeName, "Future") {
 		s.tag["future_"+contractType] = pair
-	} else if strings.Contains(exchangeName, "swap") {
+	} else if strings.Contains(exchangeName, "Swap") {
 		s.tag["swap"] = pair
 	} else {
 		s.tag["spot"] = pair

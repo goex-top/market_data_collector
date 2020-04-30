@@ -4,7 +4,7 @@ go 1.13
 
 require (
 	github.com/go-gota/gota v0.10.1
-	github.com/goex-top/market_center v1.0.5-alpha.0.20200430062524-d15f449fbfa3
+	github.com/goex-top/market_center v1.0.6-alpha
 	github.com/influxdata/influxdb1-client v0.0.0-20191209144304-8bf82d3c094d
 	github.com/jinzhu/configor v1.2.0
 	github.com/json-iterator/go v1.1.8
