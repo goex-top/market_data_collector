@@ -1,13 +1,13 @@
 {
   "subs": [
     {
-      "exchange_name": "binance.com",
+      "exchange_name": "Binance",
       "currency_pair": "BTC_USDT",
       "period": 100,
       "flag": 3
     },
     {
-      "exchange_name": "binance.com_swap",
+      "exchange_name": "Swap_Binance",
       "currency_pair": "BTC_USDT",
       "contract_type": "swap",
       "period": 100,

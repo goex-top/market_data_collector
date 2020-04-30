@@ -2,7 +2,7 @@ package client
 
 import (
 	"github.com/goex-top/market_center"
-	"github.com/goex-top/market_center_client"
+	mcc "github.com/goex-top/market_center/client"
 	"github.com/nntaoli-project/goex"
 	"github.com/nntaoli-project/goex/builder"
 	"os"
@@ -14,12 +14,12 @@ type Client struct {
 	contractType string
 	spotApi      goex.API
 	futureApi    goex.FutureRestAPI
-	c            *market_center_client.Client
+	c            *mcc.Client
 	isDirect     bool
 	isSpot       bool
 }
 
-func NewClient(exchangeName, currencyPair, contractType string, c *market_center_client.Client) *Client {
+func NewClient(exchangeName, currencyPair, contractType string, c *mcc.Client) *Client {
 	proxy := os.Getenv("HTTP_PROXY")
 	var spotApi goex.API
 	var futureApi goex.FutureRestAPI
@@ -27,9 +27,9 @@ func NewClient(exchangeName, currencyPair, contractType string, c *market_center
 	var isSpot = !market_center.IsFutureExchange(exchangeName)
 	if c == nil {
 		if isSpot {
-			spotApi = builder.NewAPIBuilder().HttpProxy(proxy).Build(exchangeName)
+			spotApi = builder.NewAPIBuilder().HttpProxy(proxy).Build(market_center.SupportAdapter[exchangeName])
 		} else {
-			futureApi = builder.NewAPIBuilder().HttpProxy(proxy).BuildFuture(exchangeName)
+			futureApi = builder.NewAPIBuilder().HttpProxy(proxy).BuildFuture(market_center.SupportAdapter[exchangeName])
 		}
 		direct = true
 	}

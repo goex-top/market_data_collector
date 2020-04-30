@@ -3,7 +3,7 @@ package config
 import "github.com/goex-top/market_center"
 
 type Subscribe struct {
-	ExchangeName string                 `json:"exchange_name" yaml:"exchange_name" default:"binance.com"`
+	ExchangeName string                 `json:"exchange_name" yaml:"exchange_name" default:"Binance"`
 	CurrencyPair string                 `json:"currency_pair" yaml:"currency_pair" default:"BTC_USDT"`
 	ContractType string                 `json:"contract_type,omitempty" yaml:"contract_type" default:""`
 	Period       int64                  `json:"period" yaml:"period" default:"100"`

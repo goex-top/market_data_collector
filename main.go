@@ -5,7 +5,7 @@ import (
 	"flag"
 	"fmt"
 	"github.com/goex-top/market_center"
-	mcc "github.com/goex-top/market_center_client"
+	mcc "github.com/goex-top/market_center/client"
 	"github.com/goex-top/market_data_collector/client"
 	"github.com/goex-top/market_data_collector/collector"
 	"github.com/goex-top/market_data_collector/config"
