@@ -5,3 +5,5 @@
 /tar/*.tar.gz
 /config.json
 /config.yml
+/output/csv/
+/output/tar/

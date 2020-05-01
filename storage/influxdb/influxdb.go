@@ -56,11 +56,11 @@ func NewInfluxdb(ctx context.Context,
 	}
 	s.tag = make(map[string]string)
 	if strings.Contains(exchangeName, "Future") {
-		s.tag["future_"+contractType] = pair
+		s.tag[exchangeName+"_"+contractType] = pair
 	} else if strings.Contains(exchangeName, "Swap") {
-		s.tag["swap"] = pair
+		s.tag[exchangeName+"_"+contractType] = pair
 	} else {
-		s.tag["spot"] = pair
+		s.tag[exchangeName+"_spot"] = pair
 	}
 	s.cli = cli
 	s.saveTickerChan = make(chan goex.Ticker)
@@ -120,7 +120,7 @@ func (s *InfluxdbStorage) SaveWorker() {
 				fields[fmt.Sprintf("bid%d_price", k)] = v.Price
 				fields[fmt.Sprintf("bid%d_amount", k)] = v.Amount
 			}
-			s.WritesPoints(s.exchangeName+"_"+"depth", s.tag, fields)
+			s.WritesPoints("depth", s.tag, fields)
 		case o := <-s.saveTickerChan:
 			fields := make(map[string]interface{})
 			fields["ts"] = int64(o.Date)
@@ -131,7 +131,7 @@ func (s *InfluxdbStorage) SaveWorker() {
 			fields["high"] = o.High
 			fields["low"] = o.Low
 
-			s.WritesPoints(s.exchangeName+"_"+"ticker", s.tag, fields)
+			s.WritesPoints("ticker", s.tag, fields)
 
 		case o := <-s.saveKlineChan:
 			fields := make(map[string]interface{})
@@ -141,7 +141,7 @@ func (s *InfluxdbStorage) SaveWorker() {
 			fields["low"] = o.Low
 			fields["close"] = o.Close
 			fields["vol"] = o.Vol
-			s.WritesPoints(s.exchangeName+"_"+"kline", s.tag, fields)
+			s.WritesPoints("kline", s.tag, fields)
 
 		case <-s.ctx.Done():
 			s.Close()
