@@ -159,7 +159,8 @@ func (s *InfluxdbStorage) WritesPoints(table string, tags map[string]string, fie
 	})
 
 	if err != nil {
-		log.Fatal(err)
+		log.Println("Influxdb NewBatchPoints err:", err)
+		return
 	}
 
 	pt, err := client.NewPoint(
@@ -169,12 +170,14 @@ func (s *InfluxdbStorage) WritesPoints(table string, tags map[string]string, fie
 		time.Now(),
 	)
 	if err != nil {
-		log.Fatal(err)
+		log.Println("Influxdb NewPoint err:", err)
+		return
 	}
 	bp.AddPoint(pt)
 
 	if err := s.cli.Write(bp); err != nil {
-		log.Fatal(err)
+		log.Println("Influxdb Write err:", err)
+		return
 	}
 }
 
