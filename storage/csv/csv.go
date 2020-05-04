@@ -58,7 +58,7 @@ func NewCsvStorage(
 	isNew := false
 
 	if flag&market_center.DataFlag_Depth != 0 {
-		isNew, depthFile = openFile(fmt.Sprintf("%s/depth_%s_%s_%s%s.csv", prefix, exchangeName, pair, contractType, ts))
+		isNew, depthFile = OpenCsvFile(fmt.Sprintf("%s/depth_%s_%s_%s%s.csv", prefix, exchangeName, pair, contractType, ts))
 		depthCsv = csv.NewWriter(depthFile)
 		if isNew {
 			data := []string{"t", "a", "b"}
@@ -69,7 +69,7 @@ func NewCsvStorage(
 	}
 
 	if flag&market_center.DataFlag_Ticker != 0 {
-		isNew, tickerFile = openFile(fmt.Sprintf("%s/ticker_%s_%s_%s%s.csv", prefix, exchangeName, pair, contractType, ts))
+		isNew, tickerFile = OpenCsvFile(fmt.Sprintf("%s/ticker_%s_%s_%s%s.csv", prefix, exchangeName, pair, contractType, ts))
 		tickerCsv = csv.NewWriter(tickerFile)
 		if isNew {
 			data := []string{"t", "b", "s", "h", "l", "v"}
@@ -80,7 +80,7 @@ func NewCsvStorage(
 	}
 
 	if flag&market_center.DataFlag_Kline != 0 {
-		isNew, klineFile = openFile(fmt.Sprintf("%s/depth_%s_%s_%s%s.csv", prefix, exchangeName, pair, contractType, ts))
+		isNew, klineFile = OpenCsvFile(fmt.Sprintf("%s/depth_%s_%s_%s%s.csv", prefix, exchangeName, pair, contractType, ts))
 		klineCsv = csv.NewWriter(klineFile)
 		if isNew {
 			data := []string{"t", "o", "h", "l", "c", "v"}
@@ -132,30 +132,6 @@ func (s *CsvStorage) SaveKline(kline *goex.Kline) {
 	}
 
 	s.saveKlineChan <- *kline
-}
-
-func openFile(fileName string) (bool, *os.File) {
-	var file *os.File
-	var err1 error
-	var isNew = false
-	checkFileIsExist := func(fileName string) bool {
-		var exist = true
-		if _, err := os.Stat(fileName); os.IsNotExist(err) {
-			exist = false
-		}
-		return exist
-	}
-	if checkFileIsExist(fileName) {
-		file, err1 = os.OpenFile(fileName, os.O_CREATE|os.O_APPEND|os.O_RDWR, 666)
-	} else {
-		file, err1 = os.Create(fileName)
-		isNew = true
-	}
-	if err1 != nil {
-		fmt.Fprintf(os.Stderr, "unable to write file on filehook %v", err1)
-		panic(err1)
-	}
-	return isNew, file
 }
 
 func (s *CsvStorage) Close() {
@@ -214,7 +190,7 @@ func (s *CsvStorage) reNewFile() {
 	isNew := false
 
 	if s.flag&market_center.DataFlag_Depth != 0 {
-		isNew, s.depthFile = openFile(fmt.Sprintf("%s/depth_%s_%s_%s%s.csv", s.prefix, s.exchangeName, s.pair, s.contractType, ts))
+		isNew, s.depthFile = OpenCsvFile(fmt.Sprintf("%s/depth_%s_%s_%s%s.csv", s.prefix, s.exchangeName, s.pair, s.contractType, ts))
 		s.depthCsv = csv.NewWriter(s.depthFile)
 		if isNew {
 			data := []string{"t", "a", "b"}
@@ -224,7 +200,7 @@ func (s *CsvStorage) reNewFile() {
 	}
 
 	if s.flag&market_center.DataFlag_Ticker != 0 {
-		isNew, s.tickerFile = openFile(fmt.Sprintf("%s/ticker_%s_%s_%s%s.csv", s.prefix, s.exchangeName, s.pair, s.contractType, ts))
+		isNew, s.tickerFile = OpenCsvFile(fmt.Sprintf("%s/ticker_%s_%s_%s%s.csv", s.prefix, s.exchangeName, s.pair, s.contractType, ts))
 		s.tickerCsv = csv.NewWriter(s.tickerFile)
 		if isNew {
 			data := []string{"t", "b", "s", "h", "l", "v"}
@@ -234,7 +210,7 @@ func (s *CsvStorage) reNewFile() {
 	}
 
 	if s.flag&market_center.DataFlag_Kline != 0 {
-		isNew, s.klineFile = openFile(fmt.Sprintf("%s/depth_%s_%s_%s%s.csv", s.prefix, s.exchangeName, s.pair, s.contractType, ts))
+		isNew, s.klineFile = OpenCsvFile(fmt.Sprintf("%s/depth_%s_%s_%s%s.csv", s.prefix, s.exchangeName, s.pair, s.contractType, ts))
 		s.klineCsv = csv.NewWriter(s.klineFile)
 		if isNew {
 			data := []string{"t", "o", "h", "l", "c", "v"}
@@ -309,4 +285,28 @@ func (s *CsvStorage) SaveWorker() {
 			return
 		}
 	}
+}
+
+func OpenCsvFile(fileName string) (bool, *os.File) {
+	var file *os.File
+	var err1 error
+	var isNew = false
+	checkFileIsExist := func(fileName string) bool {
+		var exist = true
+		if _, err := os.Stat(fileName); os.IsNotExist(err) {
+			exist = false
+		}
+		return exist
+	}
+	if checkFileIsExist(fileName) {
+		file, err1 = os.OpenFile(fileName, os.O_CREATE|os.O_APPEND|os.O_RDWR, 666)
+	} else {
+		file, err1 = os.Create(fileName)
+		isNew = true
+	}
+	if err1 != nil {
+		fmt.Fprintf(os.Stderr, "unable to write file on filehook %v", err1)
+		panic(err1)
+	}
+	return isNew, file
 }

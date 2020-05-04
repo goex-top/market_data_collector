@@ -38,6 +38,9 @@ func (d *DepthDataFromCSVeData) Load(filename string) ([]goex.Depth, error) {
 	if !strings.Contains(filename, "depth") {
 		return nil, errors.New("no a standard depth filename")
 	}
+	if d.FileDir[len(d.FileDir)-1] != '/' {
+		d.FileDir += "/"
+	}
 
 	df := LoadDataFrameFromCSV(d.FileDir + filename)
 
