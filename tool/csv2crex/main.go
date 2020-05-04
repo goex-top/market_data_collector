@@ -56,11 +56,17 @@ func main() {
 	targetCsv := csv.NewWriter(targetCsvFile)
 	if isNew {
 		data := []string{"t"}
-		for k := range depth {
+		for k := range depth[0].AskList {
+			if k >= 20 {
+				break
+			}
 			data = append(data, fmt.Sprintf("asks[%d].price", k))
 			data = append(data, fmt.Sprintf("asks[%d].amount", k))
 		}
-		for k := range depth {
+		for k := range depth[0].BidList {
+			if k >= 20 {
+				break
+			}
 			data = append(data, fmt.Sprintf("bids[%d].price", k))
 			data = append(data, fmt.Sprintf("bids[%d].amount", k))
 		}
@@ -70,11 +76,17 @@ func main() {
 
 	for k := range depth {
 		data := []string{strconv.Itoa(int(depth[k].UTime.UnixNano() / int64(time.Millisecond)))}
-		for _, asks := range depth[k].AskList {
+		for kk, asks := range depth[k].AskList {
+			if kk >= 20 {
+				break
+			}
 			data = append(data, strconv.FormatFloat(asks.Price, 'f', -1, 64))
 			data = append(data, strconv.FormatFloat(asks.Amount, 'f', -1, 64))
 		}
-		for _, bids := range depth[k].BidList {
+		for kk, bids := range depth[k].BidList {
+			if kk >= 20 {
+				break
+			}
 			data = append(data, strconv.FormatFloat(bids.Price, 'f', -1, 64))
 			data = append(data, strconv.FormatFloat(bids.Amount, 'f', -1, 64))
 		}
