@@ -151,13 +151,11 @@ influxDB schema
 
 |MEASUREMENT | TAGS | FIELDS|
 |  ----  | ----  | ----  |
-|exchangeName_ticker  | spot=pair    | xxx|
-|exchangeName_kline  | future_contractType=pair  | xxx|
-|exchangeName_depth  | swap=pair    | xxx |
+|ticker  | exchangeName_spot=pair    | xxx|
+|kline  | exchangeName_future_contractType=pair  | xxx|
+|depth  | exchangeName_swap=pair    | xxx |
 
-Measurement: Data Feed-Exxhange (configurable)
-TAGS: pair
-FIELDS: timestamp, amount, price, other funding specific fields
+> docker: https://github.com/philhawthorne/docker-influxdb-grafana
 
 ## Support Data
 * Ticker 
