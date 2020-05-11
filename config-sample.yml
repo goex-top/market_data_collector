@@ -1,6 +1,6 @@
 ---
 subs:
-  - exchange_name: binance.com
+  - exchange_name: Binance
     currency_pair: BTC_USDT
     period: 100
     flag: 2

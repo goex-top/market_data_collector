@@ -53,7 +53,7 @@ func main() {
 	if cfg.Store.Csv == cfg.Store.InfluxDB {
 		panic("currently only support csv, please check your configure")
 	}
-	//log.Println(cfg)
+
 	ctx, cancel := context.WithCancel(context.Background())
 	for _, v := range cfg.Subs {
 		var sto storage.Storage

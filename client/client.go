@@ -6,6 +6,7 @@ import (
 	"github.com/nntaoli-project/goex"
 	"github.com/nntaoli-project/goex/builder"
 	"os"
+	"sort"
 )
 
 type Client struct {
@@ -93,9 +94,28 @@ func (c *Client) GetDepth() *goex.Depth {
 			depth, err = c.c.GetFutureDepth(c.ExchangeName, c.ContractType, c.CurrencyPair)
 		}
 	}
-	if err != nil {
+	if err != nil || depth.AskList.Len() == 0 || depth.BidList.Len() == 0 {
 		return nil
 	}
+
+	if depth.AskList[0].Price > depth.AskList[1].Price {
+		sort.Slice(depth.AskList, func(i, j int) bool {
+			return depth.AskList[i].Price < depth.AskList[j].Price
+		})
+	}
+	if depth.BidList[0].Price < depth.BidList[1].Price {
+		sort.Slice(depth.BidList, func(i, j int) bool {
+			return depth.BidList[i].Price > depth.BidList[j].Price
+		})
+	}
+
+	if depth.AskList.Len() > 20 {
+		depth.AskList = depth.AskList[:20]
+	}
+	if depth.BidList.Len() > 20 {
+		depth.BidList = depth.BidList[:20]
+	}
+
 	return depth
 }
 
