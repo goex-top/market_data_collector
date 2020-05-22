@@ -94,7 +94,7 @@ func (c *Client) GetDepth() *goex.Depth {
 			depth, err = c.c.GetFutureDepth(c.ExchangeName, c.ContractType, c.CurrencyPair)
 		}
 	}
-	if err != nil || depth.AskList.Len() == 0 || depth.BidList.Len() == 0 {
+	if err != nil || depth.AskList.Len() < 2 || depth.BidList.Len() < 2 {
 		return nil
 	}
 
