@@ -10,6 +10,7 @@ import (
 	"log"
 	"os"
 	"strings"
+	"time"
 )
 
 func usage() {
@@ -76,6 +77,11 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+	_, _, err = cli.Ping(time.Second * 5)
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println("ping %s is ok", url)
 	if o[len(o)-1] != '/' {
 		o += "/"
 	}
@@ -96,12 +102,13 @@ func main() {
 		targetCsv.Write(data)
 		targetCsv.Flush()
 	} else {
-		fmt.Printf("file exist:%s, exit!", target)
+		fmt.Printf("file exist:%s, exit!\n", target)
 		return
 	}
 
 	// verify tag
 	q := fmt.Sprintf("SHOW TAG VALUES ON %s FROM depth WITH KEY = %s", databasename, t[0])
+	fmt.Println(q)
 	ret, err := QueryDB(cli, databasename, q)
 	if err != nil {
 		fmt.Println(err)
@@ -140,7 +147,6 @@ func main() {
 		for _, value := range row.Values {
 			if value[1] != nil {
 				count++
-				fmt.Print(".")
 				data := make([]string, 0)
 				data = append(data, string(value[1].(json.Number)))
 				//value = value[2:]
