@@ -12,15 +12,15 @@ import (
 )
 
 type InfluxdbStorage struct {
-	ctx          context.Context
-	exchangeName string
-	pair         string
-	contractType string
-	tag          map[string]string
-	Url,
-	DatabaseName,
-	Username,
-	Password string
+	ctx            context.Context
+	exchangeName   string
+	pair           string
+	contractType   string
+	tag            map[string]string
+	Url            string
+	DatabaseName   string
+	Username       string
+	Password       string
 	cli            client.Client
 	saveDepthChan  chan goex.Depth
 	saveTickerChan chan goex.Ticker
@@ -101,10 +101,11 @@ func (s *InfluxdbStorage) Close() {
 
 func (s *InfluxdbStorage) SaveWorker() {
 	/*
-		MEASUREMENT    | TAGS         | FIELDS
-		exchangeName_ticker  | spot=pair    | xxx
-		exchangeName_kline  | future_contractType=pair  | xxx
-		exchangeName_depth  | swap=pair    | xxx
+		|MEASUREMENT | TAGS | FIELDS|
+		|  ----  | ----  | ----  |
+		|ticker  | exchangeName_spot=pair    | xxx|
+		|kline  | exchangeName_future_contractType=pair  | xxx|
+		|depth  | exchangeName_swap=pair    | xxx |
 	*/
 
 	for {
