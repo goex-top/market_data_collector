@@ -39,8 +39,8 @@ func main() {
 	var end string
 	var help bool
 	flag.StringVar(&o, "o", "./", "output path")
-	flag.StringVar(&url, "u", "", "influxdb url")
-	flag.StringVar(&databasename, "d", "", "database name")
+	flag.StringVar(&url, "u", "http://localhost:8086", "influxdb url, http://localhost:8086")
+	flag.StringVar(&databasename, "d", "market_data", "database name, market_data")
 	flag.StringVar(&username, "n", "", "username")
 	flag.StringVar(&password, "p", "", "password")
 	flag.StringVar(&tag, "t", "", "tag, Future_Okex_next_week=BTC_USDT")
@@ -51,8 +51,6 @@ func main() {
 
 	flag.Parse()
 
-	//url = "http://localhost:8086"
-	databasename = "market_data"
 	if help {
 		flag.Usage()
 		return
@@ -69,7 +67,7 @@ func main() {
 		fmt.Println("please input tag")
 		return
 	}
-
+	fmt.Printf("url:%s\ndatabase:%s\ntag:%s\nstart:%s\nend:%s\n", url, databasename, tag, start, end)
 	cli, err := client.NewHTTPClient(client.HTTPConfig{
 		Addr:     url,
 		Username: username,
@@ -78,9 +76,31 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+	if o[len(o)-1] != '/' {
+		o += "/"
+	}
+	t := strings.Split(tag, "=")
+	target := fmt.Sprintf("depth_%s_%s_%s_%s.csv", t[0], t[1], start, end)
+	isNew, targetCsvFile := csvsto.OpenCsvFile(o + target)
+	targetCsv := csv.NewWriter(targetCsvFile)
+	if isNew {
+		data := []string{"t"}
+		for k := 0; k < 20; k++ {
+			data = append(data, fmt.Sprintf("asks[%d].price", k))
+			data = append(data, fmt.Sprintf("asks[%d].amount", k))
+		}
+		for k := 0; k < 20; k++ {
+			data = append(data, fmt.Sprintf("bids[%d].price", k))
+			data = append(data, fmt.Sprintf("bids[%d].amount", k))
+		}
+		targetCsv.Write(data)
+		targetCsv.Flush()
+	} else {
+		fmt.Printf("file exist:%s, exit!", target)
+		return
+	}
 
 	// verify tag
-	t := strings.Split(tag, "=")
 	q := fmt.Sprintf("SHOW TAG VALUES ON %s FROM depth WITH KEY = %s", databasename, t[0])
 	ret, err := QueryDB(cli, databasename, q)
 	if err != nil {
@@ -91,9 +111,6 @@ func main() {
 		fmt.Println("tag query no data")
 		return
 	}
-
-	//start = "2020-05-22T23:00:00Z"
-	//end = "2020-05-23T23:05:00Z"
 
 	// start query data
 
@@ -117,29 +134,13 @@ func main() {
 		fmt.Println("query no data ", ret[0].Err)
 		return
 	}
-	if o[len(o)-1] != '/' {
-		o += "/"
-	}
-	target := fmt.Sprintf("depth_%s_%s_%s_%s.csv", t[0], t[1], start, end)
-	isNew, targetCsvFile := csvsto.OpenCsvFile(o + target)
-	targetCsv := csv.NewWriter(targetCsvFile)
-	if isNew {
-		data := []string{"t"}
-		for k := 0; k < 20; k++ {
-			data = append(data, fmt.Sprintf("asks[%d].price", k))
-			data = append(data, fmt.Sprintf("asks[%d].amount", k))
-		}
-		for k := 0; k < 20; k++ {
-			data = append(data, fmt.Sprintf("bids[%d].price", k))
-			data = append(data, fmt.Sprintf("bids[%d].amount", k))
-		}
-		targetCsv.Write(data)
-		targetCsv.Flush()
-	}
 
+	count := 0
 	for _, row := range ret[0].Series {
 		for _, value := range row.Values {
 			if value[1] != nil {
+				count++
+				fmt.Print(".")
 				data := make([]string, 0)
 				data = append(data, string(value[1].(json.Number)))
 				//value = value[2:]
@@ -152,6 +153,7 @@ func main() {
 		}
 	}
 	targetCsv.Flush()
+	fmt.Printf("\n%d rows has been exported to %s sucuessful!\n", count, target)
 }
 
 //query
