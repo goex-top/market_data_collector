@@ -7,7 +7,6 @@ import (
 	"fmt"
 	csvsto "github.com/goex-top/market_data_collector/storage/csv"
 	client "github.com/influxdata/influxdb1-client/v2"
-	"log"
 	"os"
 	"strings"
 	"time"
@@ -75,19 +74,23 @@ func main() {
 		Password: password,
 	})
 	if err != nil {
-		log.Fatal(err)
+		fmt.Printf("new influxdb client fail:%s, exit!\n", err)
+		return
 	}
 	_, _, err = cli.Ping(time.Second * 5)
 	if err != nil {
-		log.Fatal(err)
+		fmt.Printf("ping infuxdb fail:%s, exit!\n", err)
+		return
 	}
-	fmt.Println("ping %s is ok", url)
+	fmt.Printf("ping %s is ok\n", url)
 	if o[len(o)-1] != '/' {
 		o += "/"
 	}
 	t := strings.Split(tag, "=")
 	target := fmt.Sprintf("depth_%s_%s_%s_%s.csv", t[0], t[1], start, end)
 	isNew, targetCsvFile := csvsto.OpenCsvFile(o + target)
+	defer targetCsvFile.Close()
+
 	targetCsv := csv.NewWriter(targetCsvFile)
 	if isNew {
 		data := []string{"t"}
@@ -120,46 +123,63 @@ func main() {
 	}
 
 	// start query data
-
-	q = "SELECT last(ts) AS ts,"
-	for i := 0; i < 20; i++ {
-		q += fmt.Sprintf(" last(\"ask%d_price\") AS \"asks[%d].price\", last(\"ask%d_amount\") AS \"asks[%d].amount\",", i, i, i, i)
-	}
-	for i := 0; i < 20; i++ {
-		q += fmt.Sprintf(" last(\"bid%d_price\") AS \"bids[%d].price\", last(\"bid%d_amount\") AS \"bids[%d].amount\",", i, i, i, i)
-	}
-	q = q[:len(q)-1]
-	q += fmt.Sprintf(" FROM \"%s\".\"autogen\".\"depth\" WHERE \"%s\"='%s' AND time >= '%s' AND time <= '%s' GROUP BY time(1s) FILL(null)", databasename, t[0], t[1], start, end)
-
-	fmt.Println(q)
-	ret, err = QueryDB(cli, databasename, q)
+	st, err := time.Parse("2006-01-02T15:04:05Z", start)
 	if err != nil {
-		fmt.Println(err)
+		fmt.Printf("start time(%s) format error:%s\n", start, err)
 		return
 	}
-	if len(ret) == 0 || len(ret[0].Series) == 0 {
-		fmt.Println("query no data ", ret[0].Err)
+	et, err := time.Parse("2006-01-02T15:04:05Z", end)
+	if err != nil {
+		fmt.Printf("end time(%s) format error:%s\n", end, err)
 		return
 	}
-
+	minutes := 10
 	count := 0
-	for _, row := range ret[0].Series {
-		for _, value := range row.Values {
-			if value[1] != nil {
-				count++
-				data := make([]string, 0)
-				data = append(data, string(value[1].(json.Number)))
-				//value = value[2:]
-				for k := 2; k < len(value); k += 2 {
-					data = append(data, string(value[k].(json.Number)))
-					data = append(data, string(value[k+1].(json.Number)))
+	n := int(et.Sub(st).Minutes()/float64(minutes)) + 1
+	for k := 0; k < n; k++ {
+		q = "SELECT last(ts) AS ts,"
+		for i := 0; i < 20; i++ {
+			q += fmt.Sprintf(" last(\"ask%d_price\") AS \"asks[%d].price\", last(\"ask%d_amount\") AS \"asks[%d].amount\",", i, i, i, i)
+		}
+		for i := 0; i < 20; i++ {
+			q += fmt.Sprintf(" last(\"bid%d_price\") AS \"bids[%d].price\", last(\"bid%d_amount\") AS \"bids[%d].amount\",", i, i, i, i)
+		}
+		q = q[:len(q)-1]
+		q += fmt.Sprintf(" FROM \"%s\".\"autogen\".\"depth\" WHERE \"%s\"='%s' AND time >= '%s' AND time <= '%s' GROUP BY time(1ms) FILL(null)",
+			databasename, t[0], t[1], st.Format("2006-01-02T15:04:05Z"), st.Add(time.Hour*4).Format("2006-01-02T15:04:05Z"))
+
+		st = st.Add(time.Duration(minutes) * time.Minute)
+
+		fmt.Println(q)
+		ret, err = QueryDB(cli, databasename, q)
+		if err != nil {
+			fmt.Printf("[%s - %s] error:%s\n", st.Format("2006-01-02T15:04:05Z"), st.Add(time.Hour*4).Format("2006-01-02T15:04:05Z"), err)
+			continue
+		}
+		if len(ret) == 0 || len(ret[0].Series) == 0 {
+			fmt.Printf("[%s - %s] query no data %s\n", st.Format("2006-01-02T15:04:05Z"), st.Add(time.Hour*4).Format("2006-01-02T15:04:05Z"), ret[0].Err)
+			continue
+		}
+
+		for _, row := range ret[0].Series {
+			for _, value := range row.Values {
+				if value[1] != nil {
+					count++
+					data := make([]string, 0)
+					data = append(data, string(value[1].(json.Number)))
+					for k := 2; k < len(value); k += 2 {
+						data = append(data, string(value[k].(json.Number)))
+						data = append(data, string(value[k+1].(json.Number)))
+					}
+					targetCsv.Write(data)
 				}
-				targetCsv.Write(data)
 			}
 		}
+		targetCsv.Flush()
+		fmt.Printf("%d rows has been exported sucuessful!\n", len(ret[0].Series))
 	}
-	targetCsv.Flush()
-	fmt.Printf("\n%d rows has been exported to %s sucuessful!\n", count, target)
+
+	fmt.Printf("\ntotal %d rows has been exported to %s sucuessful!\n", count, target)
 }
 
 //query
