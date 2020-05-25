@@ -83,11 +83,12 @@ func main() {
 		return
 	}
 	fmt.Printf("ping %s is ok\n", url)
-	if o[len(o)-1] != '/' {
+	if len(o) > 0 && o[len(o)-1] != '/' {
 		o += "/"
 	}
 	t := strings.Split(tag, "=")
 	target := fmt.Sprintf("depth_%s_%s_%s_%s.csv", t[0], t[1], start, end)
+	target = strings.Replace(target, ":", ".", -1)
 	isNew, targetCsvFile := csvsto.OpenCsvFile(o + target)
 	defer targetCsvFile.Close()
 
