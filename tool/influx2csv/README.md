@@ -1,0 +1,1 @@
+`influx2csv.exe -o= -u=http://localhost:8086 -t=Huobi_spot=BTC_USDT -s=2020-05-10T00:00:00Z -e=2020-05-25T00:00:00Z`
